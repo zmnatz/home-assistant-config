@@ -8,10 +8,10 @@
 !.gitignore
 !*.md
 !integrations/**
-!.storage/lovelace
 
 # Ignore folders.
-.storage
+.storage/*
+!.storage/lovelace
 .cloud
 .google.token
 

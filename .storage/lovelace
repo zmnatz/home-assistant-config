@@ -1,0 +1,558 @@
+{
+    "data": {
+        "config": {
+            "custom_header": {
+                "compact_mode": true
+            },
+            "resources": [
+                {
+                    "type": "module",
+                    "url": "/community_plugin/mini-media-player/mini-media-player-bundle.js"
+                },
+                {
+                    "type": "js",
+                    "url": "/community_plugin/travel-time-card/travel-time-card.js"
+                },
+                {
+                    "type": "module",
+                    "url": "/community_plugin/custom-header/custom-header.js"
+                },
+                {
+                    "type": "module",
+                    "url": "/community_plugin/lovelace-slider-entity-row/slider-entity-row.js"
+                },
+                {
+                    "type": "module",
+                    "url": "/community_plugin/simple-thermostat/simple-thermostat.js"
+                }
+            ],
+            "title": "",
+            "views": [
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "cards": [
+                                {
+                                    "entity": "binary_sensor.home",
+                                    "hold_action": {
+                                        "action": "more-info"
+                                    },
+                                    "tap_action": {
+                                        "action": "call-service",
+                                        "service": "script.home_mode"
+                                    },
+                                    "type": "entity-button"
+                                },
+                                {
+                                    "entity": "binary_sensor.away",
+                                    "hold_action": {
+                                        "action": "more-info"
+                                    },
+                                    "show_icon": true,
+                                    "show_name": true,
+                                    "tap_action": {
+                                        "action": "call-service",
+                                        "service": "script.leaving_home"
+                                    },
+                                    "type": "entity-button"
+                                },
+                                {
+                                    "entity": "binary_sensor.sleep",
+                                    "hold_action": {
+                                        "action": "more-info"
+                                    },
+                                    "show_icon": true,
+                                    "show_name": true,
+                                    "tap_action": {
+                                        "action": "call-service",
+                                        "service": "script.sleep_mode"
+                                    },
+                                    "type": "entity-button"
+                                }
+                            ],
+                            "type": "horizontal-stack"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "lock.front_door"
+                                },
+                                {
+                                    "entity": "person.zaven"
+                                },
+                                {
+                                    "entity": "person.casey"
+                                }
+                            ],
+                            "type": "glance"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "light.bedroom"
+                                },
+                                {
+                                    "entity": "light.bathroom"
+                                },
+                                {
+                                    "entity": "climate.bedroom",
+                                    "hold_action": {
+                                        "action": "more-info"
+                                    },
+                                    "name": "Heater",
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    }
+                                }
+                            ],
+                            "footer": {
+                                "entities": [
+                                    "switch.air_purifier",
+                                    "switch.cooler",
+                                    {
+                                        "entity": "script.decrease_bedroom_target",
+                                        "icon": "mdi:minus"
+                                    },
+                                    {
+                                        "entity": "script.increase_bedroom_target",
+                                        "icon": "mdi:plus"
+                                    }
+                                ],
+                                "type": "buttons"
+                            },
+                            "title": "Bedroom",
+                            "type": "entities"
+                        },
+                        {
+                            "control": [
+                                "preset"
+                            ],
+                            "decimals": 0,
+                            "entity": "climate.ecobee",
+                            "label": {
+                                "temperature": "Current"
+                            },
+                            "sensors": [
+                                {
+                                    "entity": "sensor.ecobee_humidity",
+                                    "name": "Humidity",
+                                    "unit": " "
+                                }
+                            ],
+                            "step_size": 1,
+                            "type": "custom:simple-thermostat"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "light.living_room_lights"
+                                },
+                                {
+                                    "entity": "light.kitchen_lights"
+                                },
+                                {
+                                    "entity": "light.entrance_lights"
+                                },
+                                {
+                                    "entity": "light.dining_room"
+                                }
+                            ],
+                            "title": "Downstairs",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "media_player.spotify"
+                                }
+                            ],
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "light.man_cave"
+                                },
+                                {
+                                    "entity": "light.laundry"
+                                },
+                                {
+                                    "entity": "light.basement_stairs_lights",
+                                    "name": "Stairwell"
+                                }
+                            ],
+                            "footer": {
+                                "entities": [
+                                    "switch.shield",
+                                    "switch.nintendo_switch",
+                                    "switch.basement_apple_tv"
+                                ],
+                                "type": "buttons"
+                            },
+                            "type": "entities"
+                        },
+                        {
+                            "columns": [
+                                "name",
+                                "duration",
+                                "route"
+                            ],
+                            "entities": [
+                                "sensor.work",
+                                "sensor.school",
+                                "sensor.zaven_eta",
+                                "sensor.casey_eta"
+                            ],
+                            "show_header": false,
+                            "type": "custom:travel-time-card"
+                        }
+                    ],
+                    "icon": "mdi:home",
+                    "panel": false,
+                    "path": "default_view",
+                    "theme": "Backend-selected",
+                    "title": "Home"
+                },
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "entities": [
+                                {
+                                    "entity": "person.zaven"
+                                },
+                                {
+                                    "entity": "person.casey"
+                                }
+                            ],
+                            "type": "map"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "person.casey"
+                                },
+                                {
+                                    "entity": "person.zaven"
+                                }
+                            ],
+                            "type": "glance"
+                        },
+                        {
+                            "cards": [
+                                {
+                                    "entity": "sensor.zaven_battery_level",
+                                    "graph": "line",
+                                    "name": "Zaven",
+                                    "type": "sensor"
+                                },
+                                {
+                                    "entity": "sensor.casey_phone_battery_level",
+                                    "graph": "line",
+                                    "name": "Casey",
+                                    "type": "sensor"
+                                }
+                            ],
+                            "type": "horizontal-stack"
+                        },
+                        {
+                            "columns": [
+                                "name",
+                                "duration",
+                                "route"
+                            ],
+                            "entities": [
+                                "sensor.work",
+                                "sensor.school",
+                                "sensor.zaven_eta",
+                                "sensor.casey_eta"
+                            ],
+                            "show_header": false,
+                            "type": "custom:travel-time-card"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "sensor.zaven_connection_type",
+                                    "name": "Zaven"
+                                },
+                                {
+                                    "entity": "sensor.zaven_ssid",
+                                    "name": " "
+                                },
+                                {
+                                    "entity": "sensor.casey_connection_type",
+                                    "name": "Casey"
+                                },
+                                {
+                                    "entity": "sensor.casey_ssid",
+                                    "name": " "
+                                }
+                            ],
+                            "hours_to_show": 24,
+                            "refresh_interval": 0,
+                            "type": "history-graph"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "sensor.casey_activity"
+                                },
+                                {
+                                    "entity": "sensor.casey_battery_state"
+                                },
+                                {
+                                    "entity": "sensor.casey_phone_battery_level"
+                                },
+                                {
+                                    "entity": "sensor.casey_connection_type"
+                                },
+                                {
+                                    "entity": "sensor.casey_ssid"
+                                },
+                                {
+                                    "entity": "sensor.casey_geocoded_location",
+                                    "name": "Location"
+                                },
+                                {
+                                    "entity": "person.casey"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Casey",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "sensor.zaven_activity"
+                                },
+                                {
+                                    "entity": "sensor.zaven_battery_level"
+                                },
+                                {
+                                    "entity": "sensor.zaven_battery_state"
+                                },
+                                {
+                                    "entity": "sensor.zaven_connection_type"
+                                },
+                                {
+                                    "entity": "sensor.zaven_ssid"
+                                },
+                                {
+                                    "entity": "sensor.zaven_geocoded_location",
+                                    "name": "Location"
+                                },
+                                {
+                                    "entity": "person.zaven"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Zaven",
+                            "type": "entities"
+                        }
+                    ],
+                    "icon": "mdi:car",
+                    "title": "Mobile"
+                },
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "entities": [
+                                "sensor.ecobee_temperature",
+                                "sensor.bedroom_temperature_measurement",
+                                "sensor.office_door_temperature_measurement",
+                                "sensor.laundry_sensor_temperature",
+                                "sensor.basement_door_temperature_measurement"
+                            ],
+                            "type": "history-graph"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "climate.bedroom"
+                                }
+                            ],
+                            "hours_to_show": 24,
+                            "refresh_interval": 0,
+                            "type": "history-graph"
+                        },
+                        {
+                            "entities": [
+                                "climate.ecobee"
+                            ],
+                            "hours_to_show": 48,
+                            "refresh_interval": 0,
+                            "type": "history-graph"
+                        },
+                        {
+                            "entity": "sensor.ecobee_humidity",
+                            "graph": "line",
+                            "type": "sensor"
+                        },
+                        {
+                            "entities": [
+                                "sensor.ecobee_temperature",
+                                "sensor.basement_stairwell_door_temperature_measurement",
+                                "sensor.front_door_temperature_measurement"
+                            ],
+                            "type": "history-graph"
+                        },
+                        {
+                            "cards": [
+                                {
+                                    "entity": "sensor.bedroom_temperature_measurement",
+                                    "graph": "line",
+                                    "name": "Bedroom",
+                                    "type": "sensor"
+                                },
+                                {
+                                    "entity": "sensor.laundry_sensor_temperature",
+                                    "graph": "line",
+                                    "name": "Basement",
+                                    "type": "sensor"
+                                }
+                            ],
+                            "type": "horizontal-stack"
+                        },
+                        {
+                            "entity": "weather.school",
+                            "type": "weather-forecast"
+                        }
+                    ],
+                    "icon": "mdi:thermometer",
+                    "panel": false,
+                    "title": "Agenda"
+                },
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "entities": [
+                                {
+                                    "entity": "input_boolean.guest_mode"
+                                },
+                                {
+                                    "entity": "input_boolean.cleaning_mode"
+                                },
+                                {
+                                    "entity": "input_boolean.expecting_guest"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "theme": "Backend-selected",
+                            "title": "Presence",
+                            "type": "glance"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "sensor.adguard_average_processing_speed"
+                                },
+                                {
+                                    "entity": "switch.adguard_safe_browsing"
+                                },
+                                {
+                                    "entity": "switch.adguard_query_log"
+                                },
+                                {
+                                    "entity": "switch.adguard_parental_control"
+                                },
+                                {
+                                    "entity": "switch.adguard_safe_search"
+                                },
+                                {
+                                    "entity": "switch.adguard_protection"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Adguard",
+                            "type": "entities"
+                        },
+                        {
+                            "columns": 3,
+                            "entities": [
+                                {
+                                    "entity": "sensor.mfc_j497dw_status"
+                                },
+                                {
+                                    "entity": "sensor.mfc_j497dw_black_ink_remaining"
+                                },
+                                {
+                                    "entity": "sensor.mfc_j497dw_cyan_ink_remaining"
+                                },
+                                {
+                                    "entity": "sensor.mfc_j497dw_magenta_ink_remaining"
+                                },
+                                {
+                                    "entity": "sensor.mfc_j497dw_yellow_ink_remaining"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Printer",
+                            "type": "glance"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "sensor.synology_dsm_cpu_load_total"
+                                },
+                                {
+                                    "entity": "sensor.synology_dsm_memory_usage_real"
+                                },
+                                {
+                                    "entity": "sensor.synology_dsm_network_up"
+                                },
+                                {
+                                    "entity": "switch.surveillance_station_home_mode"
+                                },
+                                {
+                                    "entity": "sensor.ssl_certificate_expiry"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Synology",
+                            "type": "entities"
+                        },
+                        {
+                            "columns": 4,
+                            "entities": [
+                                {
+                                    "entity": "sensor.ring_battery"
+                                },
+                                {
+                                    "entity": "sensor.front_door_battery"
+                                },
+                                {
+                                    "entity": "sensor.front_door_contact_battery"
+                                },
+                                {
+                                    "entity": "sensor.basement_door_battery"
+                                },
+                                {
+                                    "entity": "sensor.bedroom_battery",
+                                    "name": "Bedroom"
+                                },
+                                {
+                                    "entity": "sensor.basement_stairwell_door_battery"
+                                },
+                                {
+                                    "entity": "sensor.office_door_battery"
+                                }
+                            ],
+                            "title": "Batteries",
+                            "type": "glance"
+                        }
+                    ],
+                    "icon": "mdi:settings",
+                    "panel": false,
+                    "title": "Status"
+                }
+            ]
+        }
+    },
+    "key": "lovelace",
+    "version": 1
+}
