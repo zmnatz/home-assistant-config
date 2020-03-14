@@ -1,0 +1,7 @@
+- platform: template
+  sensors: !include_dir_named template/binary_sensor/
+- platform: ping
+  host: 192.168.2.147
+  name: Living Room TV On
+  count: 2
+  scan_interval: 2

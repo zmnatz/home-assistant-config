@@ -1,0 +1,7 @@
+
+platform: generic_thermostat
+name: Bedroom
+heater: switch.cooler
+target_sensor: sensor.bedroom_temperature_measurement
+min_temp: 50
+max_temp: 80

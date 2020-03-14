@@ -1,0 +1,71 @@
+project_id: homeassistant-f3be1
+service_account: !include service_account.json
+exposed_domains:
+  - lock
+entity_config:
+  switch.air_purifier:
+    room: Bedroom
+    expose: true
+  switch.christmas_tree:
+    expose: true
+    room: Downstairs
+  switch.outdoor_lights:
+    expose: true
+    room: Outdoor
+  
+  light.office:
+    room: Office
+    expose: true
+  light.guest_bedroom:
+    room: Guest Bedroom
+    expose: true
+  light.upstairs_hallway_lights:
+    room: Upstairs
+    aliases:
+    - stairwell
+    - upstairs hallyway
+    expose: true
+ 
+  light.bedroom:
+    room: Bedroom
+    expose: true
+  light.bathroom:
+    room: Bathroom
+    expose: true
+  climate.bedroom:
+    room: Bedroom
+    name: Heater
+    expose: true
+
+  light.kitchen_lights:
+    name: Kitchen
+    room: Downstairs
+    expose: true
+  light.living_room_lights:
+    name: Living Room
+    room: Downstairs
+    expose: true
+  light.entrance_lights:
+    room: Downstairs
+    aliases:
+    - hallway
+    expose: true
+  light.dining_room:
+    room: Downstairs
+    expose: true
+
+  light.basement_stairs_lights:
+    room: Basement
+    name: Basement Hallway
+    expose: true
+  light.man_cave:
+    room: Basement
+    name: Man Cave
+    expose: true
+  light.laundry:
+    room: Basement
+    name: Laundry
+    aliases:
+     - Laundry Lights
+     - Laundry Room
+    expose: true

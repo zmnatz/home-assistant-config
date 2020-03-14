@@ -1,0 +1,9 @@
+guest_mode:
+  name: Guest
+  icon: mdi:hotel
+expecting_guest:
+  name: Expecting Guest
+  icon: mdi:houzz
+cleaning_mode:
+  name: Cleaning
+  icon: mdi:broom

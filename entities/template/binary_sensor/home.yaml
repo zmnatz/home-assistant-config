@@ -1,0 +1,4 @@
+device_class: occupancy
+friendly_name: 'Home'
+value_template: >-
+  {{ is_state_attr('climate.ecobee', 'preset_mode', 'Home')}}

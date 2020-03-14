@@ -1,0 +1,4 @@
+host: 192.168.2.117
+keyfile: /config/ssl/caseta.key
+certfile: /config/ssl/caseta.crt
+ca_certs: /config/ssl/caseta-bridge.crt
