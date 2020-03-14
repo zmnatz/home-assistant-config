@@ -1,0 +1,15 @@
+- name: Work
+  latitude: !secret work_lat
+  longitude: !secret work_lon
+  radius: 600
+  icon: mdi:office-building
+- name: !secret hq_name
+  latitude: !secret hq_lat
+  longitude: !secret hq_lon
+  radius: 250
+  icon: mdi:office
+- name: School
+  latitude: !secret school_lat
+  longitude: !secret school_lon
+  radius: 500
+  icon: mdi:chair-school

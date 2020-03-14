@@ -1,0 +1,63 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+homeassistant:
+  customize: !include customize.yaml
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+config:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+  base_url: !secret base_url
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include_dir_named scripts.yaml
+zone: !include zone.yaml
+
+sensor: !include entities/sensors.yaml
+binary_sensor: !include entities/binary_sensors.yaml
+input_boolean: !include entities/input_boolean.yaml
+switch: !include entities/switches.yaml
+light: !include entities/light.yaml
+
+
+camera: !include integrations/camera.yaml
+climate: !include_dir_list integrations/climate
+
+  
+# Text to speech
+tts:
+  - platform: google_translate
+
+homekit: !include assistants/homekit.yaml
+google_assistant: !include assistants/google_assistant.yaml
+emulated_hue: !include assistants/emulated_hue.yaml  
+    
+spotify: !include integrations/spotify.yaml
+hue: !include integrations/hue.yaml
+lutron_caseta: !include integrations/lutron.yaml
+tplink: !include integrations/tplink.yaml
+
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_api
+    allowed_chat_ids:
+      - !secret zaven_telegram
+      - !secret casey_telegram
+
+notify:
+  - name: telegram_zaven
+    platform: telegram
+    chat_id: !secret zaven_telegram
+  - name: telegram_casey
+    platform: telegram
+    chat_id: !secret casey_telegram
+      
+remote: !include entities/remote.yaml

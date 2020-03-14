@@ -1,0 +1,200 @@
+- id: '1563026077178'
+  alias: Start Homekit
+  trigger:
+  - event: start
+    platform: homeassistant
+  condition: []
+  action:
+  - delay: 0:01
+  - service: homekit.start
+- id: '1568893048333'
+  alias: Sunset
+  trigger:
+  - event: sunset
+    platform: sun
+  condition: []
+  action:
+  - service: light.turn_on
+    entity_id: light.streetlight
+- id: '1568977184659'
+  alias: 'Ecobee: Sleep Mode'
+  trigger:
+  - at: '20:30'
+    platform: time
+  - entity_id: binary_sensor.is_home
+    platform: state
+    to: 'on'
+  condition:
+  - after: '20:29'
+    before: 04:29
+    condition: time
+  - condition: state
+    entity_id: binary_sensor.is_home
+    state: 'on'
+  action:
+  - data:
+      entity_id: script.sleep_mode
+    service: script.turn_on
+  - delay: '3:00'
+  - condition: state
+    entity_id: group.downstairs
+    state: 'on'
+  - entity_id: group.downstairs
+    service: homeassistant.turn_off
+- id: '1568977375898'
+  alias: 'Ecobee: Home Mode'
+  trigger:
+  - entity_id: binary_sensor.is_home
+    platform: state
+    to: 'on'
+  condition:
+  - after: 04:29
+    before: '20:29'
+    condition: time
+  - condition: state
+    entity_id: binary_sensor.is_home
+    state: 'on'
+  action:
+  - data:
+      entity_id: script.home_mode
+    service: script.turn_on
+- id: '1568977436434'
+  alias: 'Ecobee: Away Mode'
+  trigger:
+  - entity_id: binary_sensor.is_home
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      entity_id: script.leaving_home
+    service: script.turn_on
+- id: '1570279316383'
+  alias: Morning Start
+  trigger:
+  - entity_id: group.downstairs
+    platform: state
+    to: 'on'
+  condition:
+  - after: 04:30
+    before: '10:00'
+    condition: time
+  - condition: state
+    entity_id: binary_sensor.is_home
+    state: 'on'
+  action:
+  - data:
+      entity_id: group.downstairs
+    service: homeassistant.turn_on
+  - data:
+      entity_id: climate.ecobee
+      preset_mode: home
+    service: climate.set_preset_mode
+- id: '1570797069497'
+  alias: Weekday Mornings
+  trigger:
+  - at: 05:00
+    platform: time
+  condition:
+  - condition: state
+    entity_id: binary_sensor.is_home
+    state: 'on'
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  action:
+  - entity_id: group.downstairs
+    service: light.turn_on
+- id: '1571829369785'
+  alias: Cleaning Mode
+  description: ''
+  trigger:
+  - entity_id: lock.front_door
+    from: locked
+    platform: state
+    to: unlocked
+  condition:
+  - condition: state
+    entity_id: input_boolean.cleaning_mode
+    state: 'on'
+  action:
+  - data:
+      entity_id: group.all_lights
+    service: light.turn_on
+  - data:
+      message: Denia has arrived
+    service: notify.telegram_zaven
+  - data:
+      message: Denia has arrived
+    service: notify.telegram_casey
+- id: '1571829563700'
+  alias: Guest Mode
+  description: ''
+  trigger:
+  - entity_id: lock.front_door
+    platform: state
+    to: unlocked
+  condition:
+  - condition: state
+    entity_id: input_boolean.expecting_guest
+    state: 'on'
+  action:
+  - data:
+      entity_id: input_boolean.expecting_guest
+    service: input_boolean.turn_off
+  - data:
+      entity_id: input_boolean.guest_mode
+    service: input_boolean.turn_on
+- id: '1573778939758'
+  alias: Matching Kitchen Lights
+  description: Match fan lights to kitchen lights
+  trigger:
+  - entity_id: light.kitchen_lights
+    platform: state
+  condition: []
+  action:
+  - data_template:
+      brightness: '{{ trigger.to_state.attributes.brightness or 0 }}'
+      entity_id: light.kitchen
+    service: light.turn_on
+- id: '1573782586278'
+  alias: Matching Dining Room Lights
+  description: ''
+  trigger:
+  - entity_id: light.living_room_lights
+    platform: state
+  - entity_id: light.kitchen_lights
+    platform: state
+  condition: []
+  action:
+  - data_template:
+      brightness: '{{ trigger.to_state.attributes.brightness or 0 }}'
+      entity_id: light.dining_room
+    service: light.turn_on
+- id: '1573782735526'
+  alias: Matching Hallway Lights
+  description: ''
+  trigger:
+  - entity_id: light.entrance_lights
+    platform: state
+  condition: []
+  action:
+  - data_template:
+      brightness: '{{ trigger.to_state.attributes.brightness or 0 }}'
+      entity_id:
+      - light.hallway
+    service: light.turn_on
+- id: '1574081084049'
+  alias: Sunrise
+  description: ''
+  trigger:
+  - event: sunrise
+    platform: sun
+  condition: []
+  action:
+  - service: light.turn_off
+    entity_id: light.streetlight

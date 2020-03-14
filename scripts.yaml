@@ -1,0 +1,49 @@
+home_mode:
+  alias: Home Mode
+  sequence:
+  - data:
+      entity_id: climate.ecobee
+      preset_mode: home
+    service: climate.set_preset_mode
+  - data:
+      hvac_mode: 'off'
+    entity_id: climate.bedroom
+    service: climate.set_hvac_mode
+  - data:
+      brightness: 255
+    entity_id: light.bathroom_lights
+    service: light.turn_on
+leaving_home:
+  alias: Leaving Home
+  sequence:
+  - data:
+      entity_id: group.indoor_lights
+    service: homeassistant.turn_off
+  - data:
+      entity_id: climate.ecobee
+      preset_mode: away
+    service: climate.set_preset_mode
+  - data:
+      hvac_mode: 'off'
+    entity_id: climate.bedroom
+    service: climate.set_hvac_mode
+  - data:
+      entity_id: lock.front_door
+    service: lock.lock
+sleep_mode:
+  alias: Sleep Mode
+  sequence:
+  - entity_id: lock.front_door
+    service: lock.lock
+  - data:
+      preset_mode: sleep
+    entity_id: climate.ecobee
+    service: climate.set_preset_mode
+  - data:
+      hvac_mode: heat
+    entity_id: climate.bedroom
+    service: climate.set_hvac_mode
+  - data:
+      brightness: 1
+    entity_id: light.bathroom_lights
+    service: light.turn_on

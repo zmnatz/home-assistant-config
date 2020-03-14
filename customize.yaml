@@ -1,0 +1,83 @@
+light.kitchen_lights:
+  friendly_name: Kitchen
+  icon: mdi:stove
+light.living_room_lights:
+  friendly_name: Living Room
+  icon: mdi:sofa
+automation.start_homekit:
+  hidden: true
+light.upstairs_hallway_lights:
+  friendly_name: Upstairs Hallway
+  icon: mdi:stairs
+light.entrance_lights:
+  friendly_name: Entrance
+  icon: mdi:candle
+light.guest_bedroom_light:
+  icon: mdi:hotel
+switch.cooler:
+  icon: mdi:radiator
+  name: Heater
+light.basement_stairs_lights:
+  friendly_name: Basement Stairwell
+  icon: mdi:stairs
+sensor.ssl_certificate_expiry:
+  friendly_name: Cert Expiration
+switch.christmas_tree:
+  icon: mdi:pine-tree
+automation.outdoor_lights:
+  icon: mdi:ornament
+switch.outdoor_lights:
+  icon: mdi:ornament
+light.streetlight:
+  icon: mdi:outdoor-lamp
+sensor.ring_front_door_last_motion:
+  icon: mdi:motion-sensor
+sensor.ring_front_door_last_ding:
+  icon: mdi:doorbell-video
+automation.ecobee_home_mode:
+  icon: mdi:home-import-outline
+automation.ecobee_sleep_mode:
+  icon: mdi:sleep
+automation.ecobee_away_mode:
+  icon: mdi:home-export-outline
+binary_sensor.home:
+  icon: mdi:home
+binary_sensor.sleep:
+  icon: mdi:sleep
+light.dining_room_lights:
+  friendly_name: Dining Room
+  icon: mdi:silverware
+light.hallway:
+  icon: mdi:ceiling-light
+light.kitchen_fan:
+  icon: mdi:fan
+light.bathroom:
+  icon: mdi:shower
+light.bedroom_lights:
+  icon: mdi:bed-empty
+binary_sensor.bedroom_contact:
+  icon: mdi:door-open
+light.laundry_lights:
+  icon: mdi:washing-machine
+light.man_cave:
+  icon: mdi:billiards
+binary_sensor.basement_stairwell_door_contact:
+  icon: mdi:door-open
+person.zaven:
+  icon: mdi:face
+person.casey:
+  icon: mdi:face-woman
+binary_sensor.front_door_contact:
+  icon: mdi:door
+binary_sensor.basement_door_contact:
+  icon: mdi:door-closed
+light.office_lights:
+  icon: mdi:desk-lamp
+sensor.zaven_commute:
+  friendly_name: Zaven
+sensor.casey_commute:
+  friendly_name: Casey
+light.bathroom_lights:
+  icon: mdi:shower
+binary_sensor.living_room_tv_on:
+  icon: mdi:television
