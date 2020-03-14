@@ -1,4 +1,4 @@
-project_id: homeassistant-f3be1
+project_id: !secret google_project_id
 service_account: !include service_account.json
 exposed_domains:
   - lock
