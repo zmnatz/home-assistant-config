@@ -3,10 +3,11 @@
 *
 
 # You can whitelist files/folders with !, these will not be ignored.
+!*/
 !*.yaml
 !.gitignore
 !*.md
-!/integrations/*
+!integrations/**
 
 # Ignore folders.
 .storage
