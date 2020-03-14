@@ -1,3 +1,5 @@
+friendly_name: Nintendo Switch
+icon_template: mdi:nintendo-switch
 value_template: "{{is_state_attr('remote.harmony', 'current_activity', 'Nintendo Switch')}}"
 turn_on:
   service: remote.turn_on

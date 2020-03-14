@@ -81,3 +81,5 @@ light.bathroom_lights:
   icon: mdi:shower
 binary_sensor.living_room_tv_on:
   icon: mdi:television
+switch.air_purifier:
+  icon: mdi:air-filter

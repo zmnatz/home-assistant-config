@@ -1,3 +1,5 @@
+friendly_name: Apple TV
+icon_template: mdi:apple
 value_template: "{{is_state_attr('remote.harmony', 'current_activity', 'Basement Apple TV')}}"
 turn_on:
   service: remote.turn_on

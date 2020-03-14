@@ -1,3 +1,5 @@
+friendly_name: Shield TV
+icon_template: mdi:shield
 value_template: "{{is_state_attr('remote.harmony', 'current_activity', 'SHIELD TV')}}"
 turn_on:
   service: remote.turn_on

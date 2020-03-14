@@ -47,3 +47,19 @@ sleep_mode:
       brightness: 1
     entity_id: light.bathroom_lights
     service: light.turn_on
+increase_bedroom_target:
+  alias: Increase Bedroom Target Temperature
+  sequence:
+  - entity_id: climate.bedroom
+    service: climate.set_temperature
+    data_template:
+      temperature: >-
+        {{state_attr('climate.bedroom', 'temperature') + 1}}
+decrease_bedroom_target:
+  alias: Decrease Bedroom Target Temperature
+  sequence:
+  - entity_id: climate.bedroom
+    service: climate.set_temperature
+    data_template:
+      temperature: >-
+        {{state_attr('climate.bedroom', 'temperature') - 1}}
