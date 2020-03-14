@@ -20,3 +20,5 @@ secrets.yaml
 known_devices.yaml
 .homekit.state
 .ring_cache.pickle
+www/
+custom_components/
