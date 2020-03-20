@@ -4,28 +4,6 @@
             "custom_header": {
                 "compact_mode": true
             },
-            "resources": [
-                {
-                    "type": "module",
-                    "url": "/community_plugin/mini-media-player/mini-media-player-bundle.js"
-                },
-                {
-                    "type": "js",
-                    "url": "/community_plugin/travel-time-card/travel-time-card.js"
-                },
-                {
-                    "type": "module",
-                    "url": "/community_plugin/custom-header/custom-header.js"
-                },
-                {
-                    "type": "module",
-                    "url": "/community_plugin/lovelace-slider-entity-row/slider-entity-row.js"
-                },
-                {
-                    "type": "module",
-                    "url": "/community_plugin/simple-thermostat/simple-thermostat.js"
-                }
-            ],
             "title": "",
             "views": [
                 {
@@ -76,13 +54,21 @@
                         {
                             "entities": [
                                 {
-                                    "entity": "lock.front_door"
+                                    "entity": "lock.front_door",
+                                    "name": "Lock",
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    }
                                 },
                                 {
                                     "entity": "person.zaven"
                                 },
                                 {
                                     "entity": "person.casey"
+                                },
+                                {
+                                    "entity": "binary_sensor.front_door_contact",
+                                    "name": "Door"
                                 }
                             ],
                             "type": "glance"
@@ -108,6 +94,7 @@
                             ],
                             "footer": {
                                 "entities": [
+                                    "binary_sensor.bedroom_contact",
                                     "switch.air_purifier",
                                     "switch.cooler",
                                     {
@@ -125,11 +112,10 @@
                             "type": "entities"
                         },
                         {
-                            "control": [
-                                "preset"
-                            ],
+                            "control": [],
                             "decimals": 0,
                             "entity": "climate.ecobee",
+                            "icon": "mdi:thermostat-box",
                             "label": {
                                 "temperature": "Current"
                             },
@@ -162,12 +148,8 @@
                             "type": "entities"
                         },
                         {
-                            "entities": [
-                                {
-                                    "entity": "media_player.spotify"
-                                }
-                            ],
-                            "type": "entities"
+                            "entity": "media_player.spotify",
+                            "type": "media-control"
                         },
                         {
                             "entities": [
@@ -180,16 +162,26 @@
                                 {
                                     "entity": "light.basement_stairs_lights",
                                     "name": "Stairwell"
+                                },
+                                {
+                                    "entity": "switch.surveillance_station_home_mode",
+                                    "name": "Home Mode"
                                 }
                             ],
                             "footer": {
                                 "entities": [
+                                    {
+                                        "entity": "binary_sensor.basement_stairwell_door_contact",
+                                        "icon": "mdi:stairs"
+                                    },
                                     "switch.shield",
                                     "switch.nintendo_switch",
-                                    "switch.basement_apple_tv"
+                                    "switch.basement_apple_tv",
+                                    "binary_sensor.basement_door_contact"
                                 ],
                                 "type": "buttons"
                             },
+                            "title": "Basement",
                             "type": "entities"
                         },
                         {
@@ -206,6 +198,11 @@
                             ],
                             "show_header": false,
                             "type": "custom:travel-time-card"
+                        },
+                        {
+                            "entity": "weather.home",
+                            "theme": "Google Dark Theme",
+                            "type": "weather-forecast"
                         }
                     ],
                     "icon": "mdi:home",
@@ -362,11 +359,19 @@
                         {
                             "entities": [
                                 "sensor.ecobee_temperature",
-                                "sensor.bedroom_temperature_measurement",
-                                "sensor.office_door_temperature_measurement",
+                                {
+                                    "entity": "sensor.bedroom_temperature_measurement",
+                                    "name": "Bedroom"
+                                },
+                                {
+                                    "entity": "sensor.office_door_temperature_measurement",
+                                    "name": "Office"
+                                },
                                 "sensor.laundry_sensor_temperature",
                                 "sensor.basement_door_temperature_measurement"
                             ],
+                            "hours_to_show": 24,
+                            "refresh_interval": 0,
                             "type": "history-graph"
                         },
                         {
@@ -381,7 +386,9 @@
                         },
                         {
                             "entities": [
-                                "climate.ecobee"
+                                {
+                                    "entity": "climate.ecobee"
+                                }
                             ],
                             "hours_to_show": 48,
                             "refresh_interval": 0,
@@ -393,29 +400,42 @@
                             "type": "sensor"
                         },
                         {
-                            "entities": [
-                                "sensor.ecobee_temperature",
-                                "sensor.basement_stairwell_door_temperature_measurement",
-                                "sensor.front_door_temperature_measurement"
-                            ],
-                            "type": "history-graph"
-                        },
-                        {
                             "cards": [
                                 {
-                                    "entity": "sensor.bedroom_temperature_measurement",
-                                    "graph": "line",
-                                    "name": "Bedroom",
-                                    "type": "sensor"
+                                    "cards": [
+                                        {
+                                            "entity": "sensor.basement_door_temperature_measurement",
+                                            "graph": "line",
+                                            "type": "sensor"
+                                        },
+                                        {
+                                            "entity": "sensor.laundry_sensor_temperature",
+                                            "graph": "line",
+                                            "name": "Laundry",
+                                            "type": "sensor"
+                                        }
+                                    ],
+                                    "type": "horizontal-stack"
                                 },
                                 {
-                                    "entity": "sensor.laundry_sensor_temperature",
-                                    "graph": "line",
-                                    "name": "Basement",
-                                    "type": "sensor"
+                                    "cards": [
+                                        {
+                                            "entity": "sensor.bedroom_temperature_measurement",
+                                            "graph": "line",
+                                            "name": "Bedroom",
+                                            "type": "sensor"
+                                        },
+                                        {
+                                            "entity": "sensor.office_door_temperature_measurement",
+                                            "graph": "line",
+                                            "name": "Office",
+                                            "type": "sensor"
+                                        }
+                                    ],
+                                    "type": "horizontal-stack"
                                 }
                             ],
-                            "type": "horizontal-stack"
+                            "type": "vertical-stack"
                         },
                         {
                             "entity": "weather.school",
@@ -549,6 +569,95 @@
                     "icon": "mdi:settings",
                     "panel": false,
                     "title": "Status"
+                },
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "aspect_ratio": "50%",
+                            "camera_image": "camera.basement_camera",
+                            "camera_view": "live",
+                            "entity": "camera.basement_camera",
+                            "name": "Basement",
+                            "show_name": true,
+                            "show_state": true,
+                            "type": "picture-entity"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "camera.basement_cam",
+                                    "name": "Camera"
+                                },
+                                {
+                                    "entity": "sensor.basement_door_temperature_measurement",
+                                    "name": "Temp"
+                                },
+                                {
+                                    "entity": "switch.surveillance_station_home_mode",
+                                    "name": "Home"
+                                }
+                            ],
+                            "show_name": false,
+                            "show_state": true,
+                            "type": "glance"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "binary_sensor.basement_door_contact",
+                                    "name": "Patio"
+                                },
+                                {
+                                    "entity": "binary_sensor.basement_stairwell_door_contact",
+                                    "name": "Stairwell"
+                                }
+                            ],
+                            "hours_to_show": 24,
+                            "refresh_interval": 0,
+                            "type": "history-graph"
+                        },
+                        {
+                            "entity": "sensor.basement_door_temperature_measurement",
+                            "graph": "line",
+                            "type": "sensor"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "light.man_cave",
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    }
+                                },
+                                {
+                                    "entity": "switch.shield",
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    }
+                                },
+                                {
+                                    "entity": "switch.nintendo_switch",
+                                    "name": "Switch",
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    }
+                                },
+                                {
+                                    "entity": "switch.basement_apple_tv",
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    }
+                                }
+                            ],
+                            "show_icon": true,
+                            "show_name": false,
+                            "show_state": false,
+                            "type": "glance"
+                        }
+                    ],
+                    "icon": "mdi:camera",
+                    "title": "Sensors"
                 }
             ]
         }

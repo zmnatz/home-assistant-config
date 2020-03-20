@@ -1,0 +1,5 @@
+friendly_name: Heating
+device_class: heat
+icon_template: mdi:fire
+value_template: >-
+  {{ is_state_attr('climate.ecobee', 'hvac_action', 'Heating')}}

@@ -55,8 +55,8 @@
     entity_id: binary_sensor.is_home
     state: 'on'
   action:
-  - data:
-      entity_id: script.home_mode
+  - data: {}
+    entity_id: script.home_mode
     service: script.turn_on
 - id: '1568977436434'
   alias: 'Ecobee: Away Mode'
@@ -83,13 +83,12 @@
     entity_id: binary_sensor.is_home
     state: 'on'
   action:
-  - data:
-      entity_id: group.downstairs
+  - data: {}
+    entity_id: group.downstairs
     service: homeassistant.turn_on
-  - data:
-      entity_id: climate.ecobee
-      preset_mode: home
-    service: climate.set_preset_mode
+  - data: {}
+    entity_id: script.home_mode
+    service: script.turn_on
 - id: '1570797069497'
   alias: Weekday Mornings
   trigger:
@@ -198,3 +197,39 @@
   action:
   - service: light.turn_off
     entity_id: light.streetlight
+- id: '1584180828929'
+  alias: 'Basement: Entering'
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.basement_stairwell_door_contact
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.basement_stairs_lights
+    service: light.turn_on
+  - condition: state
+    entity_id: group.presence
+    state: home
+  - data: {}
+    entity_id: switch.surveillance_station_home_mode
+    service: switch.turn_on
+  - data: {}
+    entity_id: light.man_cave
+    service: light.turn_on
+- id: '1584181106442'
+  alias: 'Basement: Leaving'
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.basement_stairwell_door_contact
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data: {}
+    entity_id: group.basement
+    service: homeassistant.turn_off
+  - data: {}
+    entity_id: switch.surveillance_station_home_mode
+    service: switch.turn_off

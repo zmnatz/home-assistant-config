@@ -9,10 +9,8 @@ home_mode:
       hvac_mode: 'off'
     entity_id: climate.bedroom
     service: climate.set_hvac_mode
-  - data:
-      brightness: 255
-    entity_id: light.bathroom_lights
-    service: light.turn_on
+  - entity_id: switch.air_purifier
+    service: switch.turn_off
 leaving_home:
   alias: Leaving Home
   sequence:
@@ -40,26 +38,58 @@ sleep_mode:
     entity_id: climate.ecobee
     service: climate.set_preset_mode
   - data:
+      temperature: 65
+    entity_id: climate.bedroom
+    service: climate.set_temperature
+  - data:
       hvac_mode: heat
     entity_id: climate.bedroom
     service: climate.set_hvac_mode
-  - data:
-      brightness: 1
-    entity_id: light.bathroom_lights
-    service: light.turn_on
+  - entity_id: switch.air_purifier
+    service: switch.turn_on
 increase_bedroom_target:
   alias: Increase Bedroom Target Temperature
   sequence:
   - entity_id: climate.bedroom
     service: climate.set_temperature
     data_template:
-      temperature: >-
-        {{state_attr('climate.bedroom', 'temperature') + 1}}
+      temperature: '{{state_attr(''climate.bedroom'', ''temperature'') + 1}}'
 decrease_bedroom_target:
   alias: Decrease Bedroom Target Temperature
   sequence:
   - entity_id: climate.bedroom
     service: climate.set_temperature
     data_template:
-      temperature: >-
-        {{state_attr('climate.bedroom', 'temperature') - 1}}
+      temperature: '{{state_attr(''climate.bedroom'', ''temperature'') - 1}}'
+increase_ecobee_high:
+  alias: Increase Ecobee High Temperature
+  sequence:
+  - data_template:
+      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'') + 1}}'
+      target_temp_low: '{{state_attr(''climate.ecobee'', ''target_temp_low'')|int}}'
+    entity_id: climate.ecobee
+    service: climate.set_temperature
+decrease_ecobee_high:
+  alias: Decrease Ecobee High Temperature
+  sequence:
+  - data_template:
+      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'') - 1}}'
+      target_temp_low: '{{state_attr(''climate.ecobee'', ''target_temp_low'')|int}}'
+    entity_id: climate.ecobee
+    service: climate.set_temperature
+increase_ecobee_low:
+  alias: Increase Ecobee Low Temperature
+  sequence:
+  - data_template:
+      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'')|int}}'
+      target_temp_low: '{{state_attr(''climate.ecobee'', ''target_temp_low'') + 1}}'
+    entity_id: climate.ecobee
+    service: climate.set_temperature
+decrease_ecobee_low:
+  alias: Decrease Ecobee Low Temperature
+  sequence:
+  - data_template:
+      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'')|int}}'
+      target_temp_low: '{{state_attr(''climate.ecobee'', ''target_temp_low'') - 1}}'
+    entity_id: climate.ecobee
+    service: climate.set_temperature

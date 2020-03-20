@@ -6,15 +6,20 @@ filter:
     - switch.christmas_tree
     - switch.outdoor_lights
     
-    
     - climate.bedroom
     - light.bedroom
     - light.bathroom
+
     - light.office
     - light.guest_bedroom
+    - light.upstairs_hallway_lights
 
+    - light.entrance_lights
     - light.hallway
     - light.dining_room
+    - light.kitchen_lights
+    - light.living_room_lights
     
     - light.man_cave
     - light.laundry
+    - light.basement_stairs_lights

@@ -1,0 +1,6 @@
+- name: telegram_zaven
+  platform: telegram
+  chat_id: !secret zaven_telegram
+- name: telegram_casey
+  platform: telegram
+  chat_id: !secret casey_telegram

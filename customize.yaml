@@ -60,7 +60,7 @@ binary_sensor.bedroom_contact:
 light.laundry_lights:
   icon: mdi:washing-machine
 light.man_cave:
-  icon: mdi:billiards
+  icon: mdi:weight-lifter
 binary_sensor.basement_stairwell_door_contact:
   icon: mdi:door-open
 person.zaven:
@@ -83,3 +83,19 @@ binary_sensor.living_room_tv_on:
   icon: mdi:television
 switch.air_purifier:
   icon: mdi:air-filter
+sensor.zaven_eta:
+  icon: mdi:face
+sensor.casey_eta:
+  icon: mdi:face-woman
+sensor.work:
+  icon: mdi:office-building
+sensor.school:
+  icon: mdi:school
+light.bedroom:
+  icon: mdi:hotel
+light.office:
+  icon: mdi:desk-lamp
+light.laundry_light:
+  icon: mdi:washing-machine
+light.laundry:
+  icon: mdi:washing-machine
