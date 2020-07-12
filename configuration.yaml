@@ -10,7 +10,6 @@ config:
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:
-  base_url: !secret base_url
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
 
@@ -27,7 +26,6 @@ zone: !include zone.yaml
 # Entities
 sensor: !include entities/sensors.yaml
 binary_sensor: !include entities/binary_sensors.yaml
-input_boolean: !include entities/input_boolean.yaml
 switch: !include entities/switches.yaml
 light: !include entities/light.yaml
 remote: !include entities/remote.yaml
@@ -36,12 +34,13 @@ remote: !include entities/remote.yaml
 camera: !include integrations/camera.yaml
 climate: !include_dir_list integrations/climate
 spotify: !include integrations/spotify.yaml
+spotcast: !include integrations/spotcast.yaml
 hue: !include integrations/hue.yaml
 lutron_caseta: !include integrations/lutron.yaml
 tplink: !include integrations/tplink.yaml
 
 # Assistants
-homekit: !include assistants/homekit.yaml
+# homekit: !include assistants/homekit.yaml
 google_assistant: !include assistants/google_assistant.yaml
 emulated_hue: !include assistants/emulated_hue.yaml  
 

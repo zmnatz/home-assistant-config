@@ -12,9 +12,8 @@ entity_config:
   switch.outdoor_lights:
     expose: true
     room: Outdoor
-  
-  light.office:
-    room: Office
+  light.nursery:
+    room: Nursery
     expose: true
   light.guest_bedroom:
     room: Guest Bedroom
@@ -47,8 +46,9 @@ entity_config:
     expose: true
   light.entrance_lights:
     room: Downstairs
-    aliases:
-    - hallway
+    expose: true
+  light.hallway:
+    room: Downstairs
     expose: true
   light.dining_room:
     room: Downstairs

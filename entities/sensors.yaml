@@ -20,11 +20,7 @@
   region: 'US'
 - platform: cert_expiry
   host: !secret domain
-- platform: synologydsm
-  host: !secret syno_ip
-  username: !secret syno_user
-  password: !secret syno_password
-  monitored_conditions:
-  - cpu_total_load
-  - memory_real_usage
-  - network_up
+- platform: template
+  sensors: !include_dir_named template/sensors/
+- platform: spotcast
+  

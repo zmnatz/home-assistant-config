@@ -5,7 +5,7 @@ turn_on:
   service: media_player.select_source
   data:
     entity_id: media_player.spotify
-    activity: Kitchen Show
+    source: Kitchen Show
 turn_off:
   service: media_player.media_pause
   data:

@@ -40,7 +40,7 @@
     entity_id: group.downstairs
     state: 'on'
   - entity_id: group.downstairs
-    service: homeassistant.turn_off
+    service: home_assistant.turn_off
 - id: '1568977375898'
   alias: 'Ecobee: Home Mode'
   trigger:
@@ -233,3 +233,147 @@
   - data: {}
     entity_id: switch.surveillance_station_home_mode
     service: switch.turn_off
+- id: '1585142258309'
+  alias: Nightlights On
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.bedroom_contact
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.sleep
+    state: 'on'
+  action:
+  - data:
+      brightness: 1
+    entity_id: light.upstairs_hallway_lights
+    service: light.turn_on
+  - after: '4:00'
+    before: '9:00'
+    condition: time
+  - data:
+      brightness: 255
+    entity_id: group.downstairs
+    service: homeassistant.turn_on
+- id: '1585142642629'
+  alias: Nightlights Off
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.bedroom_contact
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.sleep
+    state: 'on'
+  action:
+  - entity_id: light.upstairs_hallway_lights
+    service: light.turn_off
+- id: '1591741578945'
+  alias: Office On
+  description: ''
+  trigger:
+  - device_id: 77978197a7c443bdbae39c657f196340
+    domain: hue
+    platform: device
+    subtype: turn_on
+    type: remote_button_short_release
+  - device_id: f719827015b648cd934c46b945e3a91e
+    domain: binary_sensor
+    entity_id: binary_sensor.office_door_contact
+    platform: device
+    type: opened
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.office
+    service: light.turn_on
+- id: '1591741640405'
+  alias: Office Off
+  description: ''
+  trigger:
+  - device_id: 77978197a7c443bdbae39c657f196340
+    domain: hue
+    platform: device
+    subtype: turn_off
+    type: remote_button_short_release
+  - device_id: f719827015b648cd934c46b945e3a91e
+    domain: binary_sensor
+    entity_id: binary_sensor.office_door_contact
+    platform: device
+    type: not_opened
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.office
+    service: light.turn_off
+- id: '1591905136176'
+  alias: 'Spotify: Play Bedtime Music'
+  description: ''
+  trigger:
+  - device_id: 587af90b76a24b209102ea60c267e259
+    domain: hue
+    platform: device
+    subtype: dim_down
+    type: remote_button_long_release
+  condition: []
+  action:
+  - data: {}
+    entity_id: script.1591904686961
+    service: script.turn_on
+- id: '1591905399966'
+  alias: 'Harmony: Turn On Shield'
+  description: ''
+  trigger:
+  - device_id: 62c449cd9b29462e80b2143473c53917
+    domain: hue
+    platform: device
+    subtype: dim_up
+    type: remote_button_long_release
+  condition:
+  - condition: state
+    entity_id: remote.harmony
+    state: 'off'
+  action:
+  - data:
+      activity: SHIELD TV
+    entity_id: remote.harmony
+    service: remote.turn_on
+- id: '1591905462398'
+  alias: 'Harmony: Turn Off'
+  description: ''
+  trigger:
+  - device_id: 62c449cd9b29462e80b2143473c53917
+    domain: hue
+    platform: device
+    subtype: turn_off
+    type: remote_button_long_release
+  condition: []
+  action:
+  - data: {}
+    entity_id: remote.harmony
+    service: remote.turn_off
+- id: '1593732685749'
+  alias: Adblock Off
+  description: ''
+  trigger:
+  - entity_id: switch.adguard_protection
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      duration: 00:00:00
+    service: pi_hole.disable
+- id: '1593732979044'
+  alias: Adguard On
+  description: ''
+  trigger:
+  - entity_id: switch.adguard_protection
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data: {}
+    service: pi_hole.enable

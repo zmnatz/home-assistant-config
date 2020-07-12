@@ -11,6 +11,9 @@ home_mode:
     service: climate.set_hvac_mode
   - entity_id: switch.air_purifier
     service: switch.turn_off
+  - data: {}
+    entity_id: switch.spotify_bedroom
+    service: switch.turn_off
 leaving_home:
   alias: Leaving Home
   sequence:
@@ -38,11 +41,7 @@ sleep_mode:
     entity_id: climate.ecobee
     service: climate.set_preset_mode
   - data:
-      temperature: 65
-    entity_id: climate.bedroom
-    service: climate.set_temperature
-  - data:
-      hvac_mode: heat
+      hvac_mode: cool
     entity_id: climate.bedroom
     service: climate.set_hvac_mode
   - entity_id: switch.air_purifier
@@ -65,7 +64,8 @@ increase_ecobee_high:
   alias: Increase Ecobee High Temperature
   sequence:
   - data_template:
-      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'') + 1}}'
+      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'') +
+        1}}'
       target_temp_low: '{{state_attr(''climate.ecobee'', ''target_temp_low'')|int}}'
     entity_id: climate.ecobee
     service: climate.set_temperature
@@ -73,7 +73,8 @@ decrease_ecobee_high:
   alias: Decrease Ecobee High Temperature
   sequence:
   - data_template:
-      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'') - 1}}'
+      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'') -
+        1}}'
       target_temp_low: '{{state_attr(''climate.ecobee'', ''target_temp_low'')|int}}'
     entity_id: climate.ecobee
     service: climate.set_temperature
@@ -93,3 +94,29 @@ decrease_ecobee_low:
       target_temp_low: '{{state_attr(''climate.ecobee'', ''target_temp_low'') - 1}}'
     entity_id: climate.ecobee
     service: climate.set_temperature
+spotify_bedtime:
+  alias: 'Spotify: Bedtime'
+  sequence:
+  - data:
+      entity_id: media_player.bedroom_speaker
+      random_song: true
+      repeat: true
+      uri: spotify:playlist:37i9dQZF1DXdCsscAsbRNz
+    service: spotcast.start
+spotify_gym:
+  alias: 'Spotify: Gym'
+  sequence:
+  - data:
+      entity_id: media_player.basement_pair
+      force_playback: true
+      random_song: true
+      repeat: true
+    service: spotcast.start
+spotify_country:
+  alias: 'Spotify: Country Music'
+  sequence:
+  - data:
+      entity_id: media_player.spotify
+      media_content_id: spotify:playlist:37i9dQZF1DX1lVhptIYRda
+      media_content_type: playlist
+    service: media_player.play_media

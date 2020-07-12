@@ -11,7 +11,7 @@ light.upstairs_hallway_lights:
   icon: mdi:stairs
 light.entrance_lights:
   friendly_name: Entrance
-  icon: mdi:candle
+  icon: mdi:door
 light.guest_bedroom_light:
   icon: mdi:hotel
 switch.cooler:
@@ -99,3 +99,7 @@ light.laundry_light:
   icon: mdi:washing-machine
 light.laundry:
   icon: mdi:washing-machine
+light.dining_room:
+  icon: mdi:silverware
+light.nursery:
+  icon: mdi:baby-carriage

@@ -1,6 +1,3 @@
-- platform: ffmpeg
-  name: Basement Camera
-  input: !secret wyze_rtsp
 - platform: synology
   url: !secret syno_domain
   username: !secret syno_user

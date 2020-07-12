@@ -8,8 +8,10 @@ downstairs:
   name: Downstairs
   entities:
     - light.kitchen_lights
+    - light.kitchen
     - light.living_room_lights
     - light.dining_room
+    - light.hallway
     - light.entrance_lights
 presence:
   name: Presence
@@ -19,18 +21,11 @@ presence:
 indoor_lights:
   name: Indoor Lights
   entities:
-    - light.basement_stairs_lights
+    - group.downstairs
+    - group.basement
     - light.bathroom
     - light.bedroom
-    - light.dining_room
-    - light.entrance_lights
     - light.guest_bedroom
-    - light.hallway
-    - light.kitchen
-    - light.kitchen_lights
-    - light.laundry
-    - light.living_room_lights
-    - light.man_cave
     - light.office
     - light.upstairs_hallway_lights
     - switch.christmas_tree

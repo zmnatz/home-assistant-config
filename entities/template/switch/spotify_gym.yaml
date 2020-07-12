@@ -1,0 +1,11 @@
+friendly_name: Spotify Gym
+icon_template: mdi:weight-lifter
+value_template: "{{is_state_attr('media_player.spotify', 'source', 'Basement Pair')}}"
+turn_on:
+  service: script.turn_on
+  data:
+    entity_id: script.spotify_gym
+turn_off:
+  service: media_player.media_pause
+  data:
+    entity_id: media_player.spotify

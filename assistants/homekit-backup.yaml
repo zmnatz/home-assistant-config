@@ -1,8 +1,8 @@
 auto_start: false
 filter:
-  include_domains:
-    - lock
   include_entities:
+    - lock.front_door
+
     - switch.christmas_tree
     - switch.outdoor_lights
     
@@ -12,7 +12,7 @@ filter:
 
     - light.office
     - light.guest_bedroom
-    - light.upstairs_hallway_lights
+    - light.upstairs_halghts
 
     - light.entrance_lights
     - light.hallway
@@ -23,3 +23,5 @@ filter:
     - light.man_cave
     - light.laundry
     - light.basement_stairs_lights
+
+    - switch.adguard_protection
