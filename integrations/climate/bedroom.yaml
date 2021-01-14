@@ -1,8 +1,8 @@
 
 platform: generic_thermostat
 name: Bedroom
-ac_mode: true
-heater: switch.cooler
-target_sensor: sensor.bedroom_temperature_measurement
-min_temp: 50
-max_temp: 80
+ac_mode: false
+heater: switch.heater
+target_sensor: sensor.bedroom_temperature
+min_temp: 60
+max_temp: 70

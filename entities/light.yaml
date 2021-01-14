@@ -1,12 +1,12 @@
 - platform: group
-  name: Office
-  entities:
-  - light.office_lamp
-  - light.office_left
-  - light.office_right
-- platform: group
   name: Bathroom
   entities:
   - light.bathroom_1
   - light.bathroom_2
   - light.bathroom_3
+- platform: group
+  name: Bedroom Lamp
+  entities:
+    - light.bedroom_lamp_1
+    - light.bedroom_lamp_2
+    - light.bedroom_lamp_3

@@ -1,4 +1,6 @@
 {
+    "version": 1,
+    "key": "lovelace",
     "data": {
         "config": {
             "custom_header": {
@@ -7,7 +9,31 @@
             "title": "",
             "views": [
                 {
-                    "badges": [],
+                    "icon": "mdi:home",
+                    "panel": false,
+                    "path": "default_view",
+                    "theme": "Backend-selected",
+                    "title": "Home",
+                    "badges": [
+                        {
+                            "entity": "person.zaven"
+                        },
+                        {
+                            "entity": "person.casey"
+                        },
+                        {
+                            "entity": "sensor.bedroom_temperature"
+                        },
+                        {
+                            "entity": "sensor.nursery_temperature"
+                        },
+                        {
+                            "entity": "sensor.laundry_sensor_temperature"
+                        },
+                        {
+                            "entity": "binary_sensor.front_door_contact"
+                        }
+                    ],
                     "cards": [
                         {
                             "cards": [
@@ -26,67 +52,66 @@
                                             "type": "button"
                                         },
                                         {
-                                            "entity": "binary_sensor.home",
+                                            "entity": "switch.home",
                                             "hold_action": {
                                                 "action": "more-info"
                                             },
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "script.home_mode"
-                                            },
-                                            "type": "entity-button"
+                                            "type": "entity-button",
+                                            "name": "Home"
                                         },
                                         {
-                                            "entity": "binary_sensor.away",
+                                            "entity": "switch.away",
                                             "hold_action": {
                                                 "action": "more-info"
                                             },
                                             "show_icon": true,
                                             "show_name": true,
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "script.leaving_home"
-                                            },
-                                            "type": "entity-button"
+                                            "type": "entity-button",
+                                            "name": "Away"
                                         },
                                         {
-                                            "entity": "binary_sensor.sleep",
+                                            "entity": "switch.sleep",
                                             "hold_action": {
                                                 "action": "more-info"
                                             },
                                             "show_icon": true,
                                             "show_name": true,
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "script.sleep_mode"
-                                            },
-                                            "type": "entity-button"
+                                            "type": "entity-button",
+                                            "name": "Sleep"
                                         }
                                     ],
                                     "type": "horizontal-stack"
                                 },
                                 {
-                                    "cards": [
+                                    "control": [],
+                                    "decimals": 0,
+                                    "entity": "climate.ecobee",
+                                    "hide": {
+                                        "state": true
+                                    },
+                                    "icon": "mdi:home",
+                                    "label": {
+                                        "temperature": "Current"
+                                    },
+                                    "sensors": [
                                         {
-                                            "card": {
-                                                "show_name": true,
-                                                "show_state": true,
-                                                "type": "glance"
-                                            },
-                                            "entities": [
-                                                "person.zaven",
-                                                "person.casey",
-                                                {
-                                                    "entity": "binary_sensor.front_door_contact",
-                                                    "name": "Front"
-                                                }
-                                            ],
-                                            "type": "glance"
+                                            "entity": "sensor.ecobee_humidity",
+                                            "name": "Humidity"
+                                        },
+                                        {
+                                            "entity": "weather.ecobee",
+                                            "attribute": "temperature",
+                                            "name": "Outside",
+                                            "unit": "\u00b0F"
                                         }
                                     ],
-                                    "type": "horizontal-stack"
+                                    "step_layout": "row",
+                                    "step_size": 1,
+                                    "type": "custom:simple-thermostat",
+                                    "show_header": false
                                 },
                                 {
+                                    "title": "Bedroom",
                                     "cards": [
                                         {
                                             "entity": "light.bedroom",
@@ -103,15 +128,27 @@
                                             "type": "button"
                                         },
                                         {
-                                            "entity": "media_player.43_tcl_roku_tv",
+                                            "entity": "climate.bedroom",
                                             "hold_action": {
                                                 "action": "more-info"
                                             },
-                                            "icon": "mdi:television",
                                             "show_icon": true,
                                             "show_name": false,
                                             "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "type": "button",
+                                            "icon": "mdi:radiator"
+                                        },
+                                        {
+                                            "entity": "switch.fountain",
+                                            "hold_action": {
                                                 "action": "more-info"
+                                            },
+                                            "show_icon": true,
+                                            "show_name": false,
+                                            "tap_action": {
+                                                "action": "toggle"
                                             },
                                             "type": "button"
                                         },
@@ -128,90 +165,84 @@
                                             "type": "button"
                                         },
                                         {
-                                            "entity": "climate.bedroom",
+                                            "entity": "media_player.43_tcl_roku_tv",
                                             "hold_action": {
                                                 "action": "more-info"
                                             },
-                                            "icon": "mdi:air-conditioner",
+                                            "icon": "mdi:television",
+                                            "icon_height": "44px",
                                             "show_icon": true,
                                             "show_name": false,
+                                            "show_state": false,
+                                            "tap_action": {
+                                                "action": ""
+                                            },
+                                            "type": "button"
+                                        },
+                                        {
+                                            "entity": "media_player.bedroom_show",
+                                            "hold_action": {
+                                                "action": "toggle"
+                                            },
+                                            "show_icon": true,
+                                            "show_name": false,
+                                            "show_state": false,
+                                            "tap_action": {
+                                                "action": "more-info"
+                                            },
+                                            "type": "button",
+                                            "icon": "mdi:music"
+                                        },
+                                        {
+                                            "entity": "automation.wake_up",
+                                            "hold_action": {
+                                                "action": "more-info"
+                                            },
+                                            "show_icon": true,
+                                            "show_name": false,
+                                            "show_state": false,
                                             "tap_action": {
                                                 "action": "toggle"
                                             },
                                             "type": "button"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.bedroom_contact",
+                                            "hold_action": {
+                                                "action": "more-info"
+                                            },
+                                            "show_icon": true,
+                                            "show_name": false,
+                                            "show_state": false,
+                                            "tap_action": {
+                                                "action": "more-info"
+                                            },
+                                            "type": "button"
                                         }
                                     ],
-                                    "title": "Bedroom",
-                                    "type": "horizontal-stack"
+                                    "type": "grid",
+                                    "columns": 4,
+                                    "square": false
                                 },
                                 {
                                     "control": [],
                                     "decimals": 0,
                                     "entity": "climate.bedroom",
-                                    "icon": "mdi:hotel",
+                                    "icon": "mdi:bed",
                                     "label": {
                                         "temperature": "Current"
                                     },
-                                    "name": false,
                                     "step_layout": "row",
+                                    "name": "f",
                                     "step_size": 1,
-                                    "type": "custom:simple-thermostat"
-                                },
-                                {
-                                    "entities": [
-                                        {
-                                            "entity": "media_player.spotify"
-                                        }
-                                    ],
-                                    "footer": {
-                                        "entities": [
-                                            {
-                                                "entity": "switch.spotify_bedroom"
-                                            },
-                                            {
-                                                "entity": "switch.spotify_kitchen"
-                                            },
-                                            {
-                                                "entity": "switch.spotify_tap"
-                                            },
-                                            {
-                                                "entity": "switch.spotify_country"
-                                            },
-                                            {
-                                                "entity": "switch.spotify_peace"
-                                            }
-                                        ],
-                                        "type": "buttons"
-                                    },
-                                    "type": "entities"
+                                    "type": "custom:simple-thermostat",
+                                    "show_header": false
                                 }
                             ],
                             "type": "vertical-stack"
                         },
                         {
                             "cards": [
-                                {
-                                    "control": [],
-                                    "decimals": 0,
-                                    "entity": "climate.ecobee",
-                                    "hide": {
-                                        "state": true
-                                    },
-                                    "icon": "mdi:home",
-                                    "label": {
-                                        "temperature": "Current"
-                                    },
-                                    "name": false,
-                                    "sensors": [
-                                        {
-                                            "entity": "sensor.ecobee_humidity",
-                                            "name": "Humidity"
-                                        }
-                                    ],
-                                    "step_layout": "row",
-                                    "step_size": 1,
-                                    "type": "custom:simple-thermostat"
-                                },
                                 {
                                     "cards": [
                                         {
@@ -220,7 +251,7 @@
                                                 "action": "more-info"
                                             },
                                             "show_icon": true,
-                                            "show_name": true,
+                                            "show_name": false,
                                             "tap_action": {
                                                 "action": "toggle"
                                             },
@@ -232,31 +263,22 @@
                                                 "action": "more-info"
                                             },
                                             "show_icon": true,
-                                            "show_name": true,
+                                            "show_name": false,
                                             "tap_action": {
                                                 "action": "toggle"
                                             },
                                             "type": "button"
                                         },
                                         {
-                                            "entity": "group.downstairs",
-                                            "hold_action": {
-                                                "action": "toggle"
-                                            },
-                                            "icon": "mdi:power",
-                                            "name": "All Off",
-                                            "show_icon": true,
-                                            "show_name": true,
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "light.turn_off",
-                                                "service_data": {
-                                                    "entity_id": "group.downstairs"
-                                                }
-                                            },
-                                            "type": "button"
+                                            "attribute": "current_temperature",
+                                            "entity": "climate.ecobee",
+                                            "icon": "mdi:thermometer",
+                                            "name": " ",
+                                            "type": "entity",
+                                            "unit": "\u00b0F"
                                         }
                                     ],
+                                    "title": "Downstairs",
                                     "type": "horizontal-stack"
                                 },
                                 {
@@ -275,7 +297,29 @@
                                             "type": "button"
                                         },
                                         {
-                                            "entity": "light.hallway",
+                                            "entity": "light.entrance_lights",
+                                            "hold_action": {
+                                                "action": "more-info"
+                                            },
+                                            "show_icon": true,
+                                            "show_name": false,
+                                            "show_state": false,
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "type": "button",
+                                            "icon": "mdi:dome-light"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "entity": "light.deck",
+                                            "show_name": false
+                                        },
+                                        {
+                                            "entity": "group.downstairs",
                                             "hold_action": {
                                                 "action": "more-info"
                                             },
@@ -287,27 +331,114 @@
                                             "type": "button"
                                         },
                                         {
-                                            "entity": "light.entrance_lights",
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "show_name": false,
+                                            "entity": "media_player.living_room",
+                                            "icon": "mdi:apple"
+                                        },
+                                        {
+                                            "entity": "media_player.playstation_4",
                                             "hold_action": {
                                                 "action": "more-info"
                                             },
                                             "show_icon": true,
                                             "show_name": false,
+                                            "show_state": false,
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "type": "button"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "show_name": false,
+                                            "entity": "media_player.living_room_xbox",
+                                            "icon": "mdi:microsoft-xbox"
+                                        },
+                                        {
+                                            "entity": "switch.living_room_tv",
+                                            "hold_action": {
+                                                "action": "more-info"
+                                            },
+                                            "show_icon": true,
+                                            "show_name": false,
+                                            "show_state": false,
                                             "tap_action": {
                                                 "action": "toggle"
                                             },
                                             "type": "button"
                                         }
                                     ],
-                                    "type": "horizontal-stack"
+                                    "type": "grid",
+                                    "columns": 4,
+                                    "square": false
                                 },
                                 {
-                                    "entity": "weather.ecobee",
-                                    "show_forecast": true,
-                                    "type": "weather-forecast"
+                                    "cards": [
+                                        {
+                                            "entity": "light.nursery",
+                                            "hold_action": {
+                                                "action": "more-info"
+                                            },
+                                            "icon": "mdi:lightbulb",
+                                            "name": "Light",
+                                            "show_icon": true,
+                                            "show_name": true,
+                                            "show_state": false,
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "type": "button"
+                                        },
+                                        {
+                                            "entity": "switch.nursery_fan",
+                                            "hold_action": {
+                                                "action": "more-info"
+                                            },
+                                            "name": "Fan",
+                                            "show_icon": true,
+                                            "show_name": true,
+                                            "show_state": false,
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "type": "button"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.nursery_door_contact",
+                                            "hold_action": {
+                                                "action": "more-info"
+                                            },
+                                            "icon": "mdi:door-open",
+                                            "name": "Door",
+                                            "show_icon": true,
+                                            "show_name": true,
+                                            "show_state": false,
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "type": "button"
+                                        },
+                                        {
+                                            "type": "button",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "entity": "media_player.nursery_echo",
+                                            "icon": "mdi:music",
+                                            "show_name": false
+                                        }
+                                    ],
+                                    "title": "Nursery",
+                                    "type": "horizontal-stack"
                                 }
                             ],
-                            "title": "Downstairs",
                             "type": "vertical-stack"
                         },
                         {
@@ -350,13 +481,9 @@
                                                 "action": "toggle"
                                             },
                                             "type": "button"
-                                        },
-                                        {
-                                            "entity": "sensor.basement_door_temperature_measurement",
-                                            "name": " ",
-                                            "type": "sensor"
                                         }
                                     ],
+                                    "title": "Basement",
                                     "type": "horizontal-stack"
                                 },
                                 {
@@ -398,21 +525,17 @@
                                             "tap_action": {
                                                 "action": "toggle"
                                             },
-                                            "type": "button"
+                                            "type": "button",
+                                            "icon": "mdi:barn"
                                         },
                                         {
-                                            "entity": "group.basement",
-                                            "hold_action": {
-                                                "action": "more-info"
-                                            },
-                                            "icon": "mdi:power",
-                                            "name": "All",
-                                            "show_icon": true,
-                                            "show_name": true,
+                                            "type": "button",
                                             "tap_action": {
                                                 "action": "toggle"
                                             },
-                                            "type": "button"
+                                            "entity": "switch.surveillance_station_home_mode",
+                                            "show_name": true,
+                                            "name": "Record"
                                         }
                                     ],
                                     "type": "horizontal-stack"
@@ -446,28 +569,30 @@
                                             "type": "button"
                                         },
                                         {
-                                            "entity": "switch.basement_apple_tv",
                                             "hold_action": {
                                                 "action": "more-info"
                                             },
-                                            "name": "Airplay",
                                             "show_icon": true,
                                             "show_name": true,
                                             "tap_action": {
                                                 "action": "toggle"
                                             },
-                                            "type": "button"
+                                            "type": "button",
+                                            "icon": "mdi:apple",
+                                            "name": "Airplay",
+                                            "entity": "switch.basement_apple_tv"
                                         },
                                         {
-                                            "entity": "switch.surveillance_station_home_mode",
+                                            "entity": "media_player.samsung_led55_un55hu6830",
                                             "hold_action": {
                                                 "action": "more-info"
                                             },
-                                            "name": "Home",
+                                            "name": "TV",
                                             "show_icon": true,
                                             "show_name": true,
+                                            "show_state": false,
                                             "tap_action": {
-                                                "action": "toggle"
+                                                "action": "more-info"
                                             },
                                             "type": "button"
                                         }
@@ -475,37 +600,7 @@
                                     "type": "horizontal-stack"
                                 },
                                 {
-                                    "card": {
-                                        "entities": [
-                                            {
-                                                "entity": "media_player.shield"
-                                            }
-                                        ],
-                                        "show_header_toggle": false,
-                                        "type": "entities"
-                                    },
-                                    "conditions": [
-                                        {
-                                            "entity": "switch.shield",
-                                            "state": "on"
-                                        }
-                                    ],
-                                    "type": "conditional"
-                                },
-                                {
                                     "cards": [
-                                        {
-                                            "entity": "light.nursery",
-                                            "hold_action": {
-                                                "action": "more-info"
-                                            },
-                                            "show_icon": true,
-                                            "show_name": true,
-                                            "tap_action": {
-                                                "action": "toggle"
-                                            },
-                                            "type": "button"
-                                        },
                                         {
                                             "entity": "light.upstairs_hallway_lights",
                                             "hold_action": {
@@ -513,7 +608,7 @@
                                             },
                                             "name": "Hallway",
                                             "show_icon": true,
-                                            "show_name": true,
+                                            "show_name": false,
                                             "tap_action": {
                                                 "action": "toggle"
                                             },
@@ -524,213 +619,112 @@
                                             "hold_action": {
                                                 "action": "more-info"
                                             },
-                                            "icon": "mdi:hotel",
+                                            "icon": "mdi:bed",
                                             "name": "Guest",
                                             "show_icon": true,
-                                            "show_name": true,
+                                            "show_name": false,
                                             "tap_action": {
                                                 "action": "toggle"
                                             },
                                             "type": "button"
+                                        },
+                                        {
+                                            "entity": "switch.guest_fan",
+                                            "hold_action": {
+                                                "action": "more-info"
+                                            },
+                                            "show_icon": true,
+                                            "show_name": false,
+                                            "show_state": false,
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            },
+                                            "type": "button"
+                                        },
+                                        {
+                                            "type": "sensor",
+                                            "entity": "sensor.guest_temperature",
+                                            "name": " "
                                         }
                                     ],
                                     "title": "Upstairs",
                                     "type": "horizontal-stack"
-                                },
-                                {
-                                    "card": {
-                                        "card": {
-                                            "columns": 4,
-                                            "show_name": true,
-                                            "show_state": false,
-                                            "title": "Active",
-                                            "type": "glance"
-                                        },
-                                        "entities": [
-                                            {
-                                                "entity": "group.indoor_lights",
-                                                "icon": "mdi:power",
-                                                "name": "Turn Off",
-                                                "tap_action": {
-                                                    "action": "call-service",
-                                                    "service": "home_assistant.turn_off",
-                                                    "service_data": {
-                                                        "entity_id": "group.indoor_lights"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.bathroom",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.bedroom",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.guest_bedroom",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.office",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.upstairs_hallway_lights",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "switch.christmas_tree",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "switch.cooler",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.kitchen_lights",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.living_room_lights",
-                                                "name": "Couch",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "binary_sensor.living_room_tv_on",
-                                                "name": "TV"
-                                            },
-                                            {
-                                                "entity": "light.dining_room",
-                                                "name": "Table",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.hallway",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.entrance_lights",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.basement_stairs_lights",
-                                                "name": "Basement",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.man_cave",
-                                                "name": "Gym",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "light.laundry",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "switch.shield",
-                                                "name": "Shield",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "switch.nintendo_switch",
-                                                "name": "Switch",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "switch.basement_apple_tv",
-                                                "name": "Airplay",
-                                                "tap_action": {
-                                                    "action": "toggle"
-                                                }
-                                            },
-                                            {
-                                                "entity": "binary_sensor.basement_stairwell_door_contact",
-                                                "name": "Stairwell"
-                                            },
-                                            {
-                                                "entity": "binary_sensor.basement_door_contact",
-                                                "name": "Basement"
-                                            },
-                                            {
-                                                "entity": "binary_sensor.office_door_contact",
-                                                "name": "Nursery"
-                                            },
-                                            {
-                                                "entity": "media_player.basement_pair",
-                                                "name": "Basement"
-                                            },
-                                            {
-                                                "entity": "media_player.bedroom_speaker",
-                                                "name": "Bedroom"
-                                            },
-                                            {
-                                                "entity": "media_player.shield",
-                                                "name": "Shield"
-                                            }
-                                        ],
-                                        "state_filter": [
-                                            "on",
-                                            "playing"
-                                        ],
-                                        "type": "entity-filter"
-                                    },
-                                    "conditions": [
-                                        {
-                                            "entity": "group.indoor_lights",
-                                            "state": "on"
-                                        }
-                                    ],
-                                    "type": "conditional"
                                 }
                             ],
-                            "title": "Basement",
                             "type": "vertical-stack"
                         }
-                    ],
-                    "icon": "mdi:home",
-                    "panel": false,
-                    "path": "default_view",
-                    "theme": "Backend-selected",
-                    "title": "Home"
+                    ]
+                },
+                {
+                    "icon": "mdi:alarm",
+                    "title": "Alarms",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "entities",
+                            "entities": [
+                                {
+                                    "entity": "sun.sun"
+                                },
+                                {
+                                    "entity": "input_datetime.morning_start"
+                                },
+                                {
+                                    "entity": "input_datetime.wake_up_zaven"
+                                },
+                                {
+                                    "entity": "input_datetime.wake_up_casey"
+                                },
+                                {
+                                    "entity": "input_datetime.bedroom_off"
+                                },
+                                {
+                                    "entity": "input_datetime.morning_end"
+                                },
+                                {
+                                    "entity": "input_datetime.sleep"
+                                }
+                            ],
+                            "title": "Schedule",
+                            "show_header_toggle": false
+                        },
+                        {
+                            "type": "entities",
+                            "entities": [
+                                {
+                                    "entity": "automation.morning_start"
+                                },
+                                {
+                                    "entity": "automation.basement_entering"
+                                },
+                                {
+                                    "entity": "automation.wake_up"
+                                }
+                            ],
+                            "show_header_toggle": false
+                        }
+                    ]
                 },
                 {
                     "badges": [],
                     "cards": [
+                        {
+                            "entities": [
+                                {
+                                    "entity": "input_select.comfort_setting"
+                                },
+                                {
+                                    "entity": "input_boolean.guest_mode"
+                                },
+                                {
+                                    "entity": "input_boolean.cleaning_mode"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "theme": "Backend-selected",
+                            "title": "Presence",
+                            "type": "entities"
+                        },
                         {
                             "entities": [
                                 {
@@ -741,124 +735,6 @@
                                 }
                             ],
                             "type": "map"
-                        },
-                        {
-                            "cards": [
-                                {
-                                    "entity": "sensor.zaven_battery_level",
-                                    "graph": "line",
-                                    "name": "Zaven",
-                                    "type": "sensor"
-                                },
-                                {
-                                    "entity": "sensor.casey_phone_battery_level",
-                                    "graph": "line",
-                                    "name": "Casey",
-                                    "type": "sensor"
-                                }
-                            ],
-                            "type": "horizontal-stack"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "person.zaven"
-                                },
-                                {
-                                    "entity": "sensor.zaven_connection_type",
-                                    "name": "Zaven"
-                                },
-                                {
-                                    "entity": "sensor.zaven_ssid",
-                                    "name": " "
-                                },
-                                {
-                                    "entity": "person.casey"
-                                },
-                                {
-                                    "entity": "sensor.casey_connection_type",
-                                    "name": "Casey"
-                                },
-                                {
-                                    "entity": "sensor.casey_ssid",
-                                    "name": " "
-                                }
-                            ],
-                            "hours_to_show": 24,
-                            "refresh_interval": 0,
-                            "type": "history-graph"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "sensor.casey_activity"
-                                },
-                                {
-                                    "entity": "sensor.casey_battery_state"
-                                },
-                                {
-                                    "entity": "sensor.casey_phone_battery_level"
-                                },
-                                {
-                                    "entity": "sensor.casey_connection_type"
-                                },
-                                {
-                                    "entity": "sensor.casey_ssid"
-                                },
-                                {
-                                    "entity": "sensor.casey_geocoded_location",
-                                    "name": "Location"
-                                },
-                                {
-                                    "entity": "person.casey"
-                                }
-                            ],
-                            "show_header_toggle": false,
-                            "title": "Casey",
-                            "type": "entities"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "sensor.zaven_activity"
-                                },
-                                {
-                                    "entity": "sensor.zaven_battery_level"
-                                },
-                                {
-                                    "entity": "sensor.zaven_battery_state"
-                                },
-                                {
-                                    "entity": "sensor.zaven_connection_type"
-                                },
-                                {
-                                    "entity": "sensor.zaven_ssid"
-                                },
-                                {
-                                    "entity": "sensor.zaven_geocoded_location",
-                                    "name": "Location"
-                                },
-                                {
-                                    "entity": "person.zaven"
-                                }
-                            ],
-                            "show_header_toggle": false,
-                            "title": "Zaven",
-                            "type": "entities"
-                        },
-                        {
-                            "columns": [
-                                "name",
-                                "duration",
-                                "route"
-                            ],
-                            "entities": [
-                                "sensor.work",
-                                "sensor.zaven_eta",
-                                "sensor.casey_eta"
-                            ],
-                            "show_header": false,
-                            "type": "custom:travel-time-card"
                         }
                     ],
                     "icon": "mdi:car",
@@ -884,7 +760,7 @@
                                     "name": "Downstairs"
                                 },
                                 {
-                                    "entity": "sensor.basement_door_temperature_measurement",
+                                    "entity": "sensor.laundry_sensor_temperature",
                                     "name": "Basement"
                                 }
                             ],
@@ -917,6 +793,23 @@
                                 {
                                     "cards": [
                                         {
+                                            "entity": "sensor.bedroom_temperature_measurement",
+                                            "graph": "line",
+                                            "name": "Bedroom",
+                                            "type": "sensor"
+                                        },
+                                        {
+                                            "entity": "sensor.nursery_temperature",
+                                            "graph": "line",
+                                            "name": "Nursery",
+                                            "type": "sensor"
+                                        }
+                                    ],
+                                    "type": "horizontal-stack"
+                                },
+                                {
+                                    "cards": [
+                                        {
                                             "entity": "sensor.ecobee_humidity",
                                             "graph": "line",
                                             "type": "sensor"
@@ -939,23 +832,6 @@
                                         }
                                     ],
                                     "type": "horizontal-stack"
-                                },
-                                {
-                                    "cards": [
-                                        {
-                                            "entity": "sensor.bedroom_temperature_measurement",
-                                            "graph": "line",
-                                            "name": "Bedroom",
-                                            "type": "sensor"
-                                        },
-                                        {
-                                            "entity": "sensor.office_door_temperature_measurement",
-                                            "graph": "line",
-                                            "name": "Office",
-                                            "type": "sensor"
-                                        }
-                                    ],
-                                    "type": "horizontal-stack"
                                 }
                             ],
                             "type": "vertical-stack"
@@ -974,337 +850,53 @@
                     "title": "Agenda"
                 },
                 {
+                    "icon": "mdi:music",
+                    "title": "Media",
                     "badges": [],
                     "cards": [
                         {
+                            "type": "entities",
                             "entities": [
                                 {
-                                    "entity": "input_boolean.guest_mode"
+                                    "entity": "media_player.bedroom_show"
                                 },
                                 {
-                                    "entity": "input_boolean.cleaning_mode"
+                                    "entity": "media_player.kitchen_show"
                                 },
                                 {
-                                    "entity": "person.casey"
+                                    "entity": "media_player.guest_dot"
                                 },
                                 {
-                                    "entity": "person.zaven"
+                                    "entity": "media_player.laundry_dot"
+                                },
+                                {
+                                    "entity": "media_player.nursery"
+                                },
+                                {
+                                    "entity": "media_player.tap"
                                 }
-                            ],
-                            "show_header_toggle": false,
-                            "theme": "Backend-selected",
-                            "title": "Presence",
-                            "type": "entities"
+                            ]
                         },
                         {
+                            "type": "entities",
                             "entities": [
-                                {
-                                    "entity": "sensor.adguard_average_processing_speed",
-                                    "name": "Speed"
-                                },
-                                {
-                                    "entity": "switch.adguard_safe_browsing"
-                                },
-                                {
-                                    "entity": "switch.adguard_parental_control"
-                                },
-                                {
-                                    "entity": "switch.adguard_safe_search"
-                                },
-                                {
-                                    "entity": "switch.adguard_protection"
-                                },
-                                {
-                                    "entity": "sensor.adguard_dns_queries_blocked_ratio",
-                                    "name": "Block Ratio"
-                                }
-                            ],
-                            "show_header_toggle": false,
-                            "title": "Adguard",
-                            "type": "entities"
+                                "media_player.43_tcl_roku_tv",
+                                "switch.living_room_tv",
+                                "media_player.samsung_led55_un55hu6830"
+                            ]
                         },
                         {
+                            "type": "entities",
                             "entities": [
-                                {
-                                    "entity": "sensor.synology_cpu_load_total",
-                                    "name": "CPU"
-                                },
-                                {
-                                    "entity": "sensor.synology_memory_usage_real",
-                                    "name": "Memory"
-                                },
-                                {
-                                    "entity": "sensor.synology_network_up",
-                                    "name": "Upload"
-                                },
-                                {
-                                    "entity": "sensor.synology_network_down"
-                                },
-                                {
-                                    "entity": "sensor.synology_volume_used_volume_1"
-                                },
-                                {
-                                    "entity": "sensor.synology_volume_used_volume_2"
-                                },
-                                {
-                                    "entity": "sensor.ssl_certificate_expiry"
-                                },
-                                {
-                                    "entity": "switch.surveillance_station_home_mode",
-                                    "name": "Home Mode"
-                                }
-                            ],
-                            "show_header_toggle": false,
-                            "title": "Synology",
-                            "type": "entities"
-                        },
-                        {
-                            "card": {
-                                "title": "Batteries",
-                                "type": "glance"
-                            },
-                            "entities": [
-                                {
-                                    "entity": "sensor.ring_battery",
-                                    "name": "Ring"
-                                },
-                                {
-                                    "entity": "sensor.front_door_battery",
-                                    "name": "Lock"
-                                },
-                                {
-                                    "entity": "sensor.front_door_contact_battery",
-                                    "name": "Front Door"
-                                },
-                                {
-                                    "entity": "sensor.basement_door_battery",
-                                    "name": "Patio"
-                                },
-                                {
-                                    "entity": "sensor.bedroom_battery",
-                                    "name": "Bedroom"
-                                },
-                                {
-                                    "entity": "sensor.basement_stairwell_door_battery",
-                                    "name": "Basement"
-                                },
-                                {
-                                    "entity": "sensor.office_door_battery",
-                                    "name": "Office"
-                                },
-                                {
-                                    "entity": "sensor.bedroom_dimmer_battery_level",
-                                    "name": "Bedroom Switch"
-                                },
-                                {
-                                    "entity": "sensor.entrance_dimmer_battery_level",
-                                    "name": "Gym Switch"
-                                },
-                                {
-                                    "entity": "sensor.guest_bedroom_switch_battery_level",
-                                    "name": "Guest Switch"
-                                },
-                                {
-                                    "entity": "sensor.hallway_dimmer_battery_level",
-                                    "name": "Office Dimmer"
-                                }
-                            ],
-                            "state_filter": [
-                                {
-                                    "operator": "<",
-                                    "value": 30
-                                },
-                                {
-                                    "operator": ">",
-                                    "value": 95
-                                }
-                            ],
-                            "type": "entity-filter"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "sensor.brother_mfc_j497dw",
-                                    "name": "Status"
-                                },
-                                {
-                                    "entity": "sensor.brother_mfc_j497dw_bk",
-                                    "name": "Black"
-                                },
-                                {
-                                    "entity": "sensor.brother_mfc_j497dw_c",
-                                    "name": "Cyan"
-                                },
-                                {
-                                    "entity": "sensor.brother_mfc_j497dw_m",
-                                    "name": "Magenta"
-                                },
-                                {
-                                    "entity": "sensor.brother_mfc_j497dw_y",
-                                    "name": "Yellow"
-                                }
-                            ],
-                            "type": "glance"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "sensor.nut_ups_input_voltage"
-                                },
-                                {
-                                    "entity": "sensor.nut_ups_battery_runtime"
-                                },
-                                {
-                                    "entity": "sensor.nut_ups_battery_charge"
-                                },
-                                {
-                                    "entity": "sensor.nut_ups_load"
-                                },
-                                {
-                                    "entity": "sensor.nut_ups_status"
-                                }
-                            ],
-                            "title": "UPS",
-                            "type": "entities"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "media_player.shield"
-                                },
-                                {
-                                    "entity": "media_player.basement_pair"
-                                },
-                                {
-                                    "entity": "media_player.living_room_speaker"
-                                },
-                                {
-                                    "entity": "media_player.bedroom_speaker"
-                                }
-                            ],
-                            "type": "entities"
-                        },
-                        {
-                            "entities": [
-                                "sensor.pi_hole_ads_blocked_today",
-                                "sensor.pi_hole_ads_percentage_blocked_today",
-                                "sensor.pi_hole_dns_queries_cached",
-                                "sensor.pi_hole_dns_queries_forwarded",
-                                "sensor.pi_hole_dns_queries_today",
-                                "sensor.pi_hole_dns_unique_clients",
-                                "sensor.pi_hole_dns_unique_domains",
-                                "sensor.pi_hole_domains_blocked",
-                                "sensor.pi_hole_seen_clients"
-                            ],
-                            "title": "Pi-Hole",
-                            "type": "entities"
+                                "media_player.basement_group",
+                                "media_player.bedroom_speaker",
+                                "media_player.living_room_speaker",
+                                "media_player.kitchen_speaker"
+                            ]
                         }
-                    ],
-                    "icon": "mdi:settings",
-                    "panel": false,
-                    "title": "Status"
-                },
-                {
-                    "badges": [],
-                    "cards": [
-                        {
-                            "entities": [
-                                {
-                                    "entity": "camera.basement_cam",
-                                    "name": "Basement"
-                                },
-                                {
-                                    "entity": "camera.office_cam"
-                                },
-                                {
-                                    "entity": "switch.surveillance_station_home_mode",
-                                    "name": "Home"
-                                }
-                            ],
-                            "show_name": false,
-                            "show_state": true,
-                            "type": "glance"
-                        },
-                        {
-                            "cards": [
-                                {
-                                    "entity": "light.man_cave",
-                                    "hold_action": {
-                                        "action": "more-info"
-                                    },
-                                    "show_icon": true,
-                                    "show_name": true,
-                                    "tap_action": {
-                                        "action": "toggle"
-                                    },
-                                    "type": "button"
-                                },
-                                {
-                                    "entity": "light.porch",
-                                    "hold_action": {
-                                        "action": "more-info"
-                                    },
-                                    "show_icon": true,
-                                    "show_name": true,
-                                    "tap_action": {
-                                        "action": "toggle"
-                                    },
-                                    "type": "button"
-                                },
-                                {
-                                    "entity": "binary_sensor.basement_door_contact",
-                                    "hold_action": {
-                                        "action": "more-info"
-                                    },
-                                    "name": "Door",
-                                    "show_icon": true,
-                                    "show_name": true,
-                                    "tap_action": {
-                                        "action": "toggle"
-                                    },
-                                    "type": "button"
-                                }
-                            ],
-                            "type": "horizontal-stack"
-                        },
-                        {
-                            "aspect_ratio": "50%",
-                            "camera_view": "live",
-                            "entity": "camera.office_cam",
-                            "show_name": false,
-                            "show_state": false,
-                            "type": "picture-entity"
-                        },
-                        {
-                            "aspect_ratio": "50%",
-                            "camera_view": "live",
-                            "entity": "camera.basement_cam",
-                            "show_name": false,
-                            "show_state": false,
-                            "type": "picture-entity"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "binary_sensor.basement_door_contact",
-                                    "name": "Patio"
-                                },
-                                {
-                                    "entity": "binary_sensor.basement_stairwell_door_contact",
-                                    "name": "Stairwell"
-                                }
-                            ],
-                            "hours_to_show": 24,
-                            "refresh_interval": 0,
-                            "type": "history-graph"
-                        }
-                    ],
-                    "icon": "mdi:camera",
-                    "title": "Sensors"
+                    ]
                 }
             ]
         }
-    },
-    "key": "lovelace",
-    "version": 1
+    }
 }

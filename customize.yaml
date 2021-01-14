@@ -12,11 +12,6 @@ light.upstairs_hallway_lights:
 light.entrance_lights:
   friendly_name: Entrance
   icon: mdi:door
-light.guest_bedroom_light:
-  icon: mdi:hotel
-switch.cooler:
-  icon: mdi:radiator
-  name: Heater
 light.basement_stairs_lights:
   friendly_name: Basement Stairwell
   icon: mdi:stairs
@@ -63,10 +58,8 @@ light.man_cave:
   icon: mdi:weight-lifter
 binary_sensor.basement_stairwell_door_contact:
   icon: mdi:door-open
-person.zaven:
-  icon: mdi:face
-person.casey:
-  icon: mdi:face-woman
+person.zaven: {}
+person.casey: {}
 binary_sensor.front_door_contact:
   icon: mdi:door
 binary_sensor.basement_door_contact:
@@ -81,16 +74,12 @@ light.bathroom_lights:
   icon: mdi:shower
 binary_sensor.living_room_tv_on:
   icon: mdi:television
-switch.air_purifier:
-  icon: mdi:air-filter
 sensor.zaven_eta:
   icon: mdi:face
 sensor.casey_eta:
   icon: mdi:face-woman
 sensor.work:
   icon: mdi:office-building
-sensor.school:
-  icon: mdi:school
 light.bedroom:
   icon: mdi:hotel
 light.office:
@@ -103,3 +92,11 @@ light.dining_room:
   icon: mdi:silverware
 light.nursery:
   icon: mdi:baby-carriage
+group.downstairs:
+  icon: mdi:power
+zone.home:
+  radius: 200
+automation.wake_up:
+  icon: mdi:alarm
+camera.front_door_cam: {}
+camera.basement_cam: {}

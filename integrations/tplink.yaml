@@ -1,3 +1,5 @@
 discovery: false
 switch:
-  host: 192.168.2.111 
+  host: 192.168.2.111
+strip:
+  host: 192.168.2.171

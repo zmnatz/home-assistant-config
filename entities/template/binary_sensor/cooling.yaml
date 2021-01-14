@@ -1,5 +1,0 @@
-friendly_name: Cooling
-device_class: cold
-icon_template: mdi:snowflake
-value_template: >-
-  {{ is_state_attr('climate.ecobee', 'hvac_action', 'Cooling')}}

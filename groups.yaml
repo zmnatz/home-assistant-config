@@ -26,7 +26,22 @@ indoor_lights:
     - light.bathroom
     - light.bedroom
     - light.guest_bedroom
-    - light.office
+    - light.nursery
     - light.upstairs_hallway_lights
     - switch.christmas_tree
-    - switch.cooler
+    - switch.heater
+    - switch.air_purifier
+    - switch.fountain
+    - switch.guest_fan
+    - switch.nursery_fan
+default_view:
+  name: Hass IQ
+  entities:
+    - script.unlock_house
+    - script.leaving_home
+    - light.bedroom
+    - light.living_room_lights
+    - light.man_cave
+    - light.porch
+    - automation.wake_up
+

@@ -1,4 +1,3 @@
-- platform: synology
-  url: !secret syno_domain
-  username: !secret syno_user
-  password: !secret syno_password
+- platform: ffmpeg
+  name: Baby Camera
+  input: !secret baby_cam

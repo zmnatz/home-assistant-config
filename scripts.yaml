@@ -2,121 +2,163 @@ home_mode:
   alias: Home Mode
   sequence:
   - data:
-      entity_id: climate.ecobee
-      preset_mode: home
-    service: climate.set_preset_mode
-  - data:
-      hvac_mode: 'off'
-    entity_id: climate.bedroom
-    service: climate.set_hvac_mode
-  - entity_id: switch.air_purifier
-    service: switch.turn_off
-  - data: {}
-    entity_id: switch.spotify_bedroom
-    service: switch.turn_off
+      option: Home
+    entity_id: input_select.comfort_setting
+    service: input_select.select_option
+  - device_id: 8938d322fd3b11eab38eafa121ce86b4
+    domain: climate
+    entity_id: climate.ecobee
+    type: set_preset_mode
+    preset_mode: Home
+  - type: turn_on
+    device_id: 0233adeeed4c4df38fc3757290491589
+    entity_id: switch.christmas_tree
+    domain: switch
+  mode: single
+  icon: mdi:home
 leaving_home:
   alias: Leaving Home
   sequence:
   - data:
+      option: Away
+    entity_id: input_select.comfort_setting
+    service: input_select.select_option
+  - data:
       entity_id: group.indoor_lights
     service: homeassistant.turn_off
-  - data:
-      entity_id: climate.ecobee
-      preset_mode: away
-    service: climate.set_preset_mode
+  - device_id: 8938d322fd3b11eab38eafa121ce86b4
+    domain: climate
+    entity_id: climate.ecobee
+    type: set_preset_mode
+    preset_mode: Away
   - data:
       hvac_mode: 'off'
     entity_id: climate.bedroom
     service: climate.set_hvac_mode
-  - data:
-      entity_id: lock.front_door
-    service: lock.lock
+  - device_id: 9c2a65fb274142b89bbb1017849b5da2
+    domain: lock
+    entity_id: lock.front_door
+    type: lock
+  mode: single
+  icon: mdi:car
 sleep_mode:
   alias: Sleep Mode
   sequence:
+  - data:
+      option: Sleep
+    entity_id: input_select.comfort_setting
+    service: input_select.select_option
   - entity_id: lock.front_door
     service: lock.lock
   - data:
-      preset_mode: sleep
-    entity_id: climate.ecobee
-    service: climate.set_preset_mode
-  - data:
-      hvac_mode: cool
+      hvac_mode: heat
     entity_id: climate.bedroom
     service: climate.set_hvac_mode
+  - service: climate.set_temperature
+    data:
+      temperature: 64
+    entity_id: climate.bedroom
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.fountain
   - entity_id: switch.air_purifier
     service: switch.turn_on
-increase_bedroom_target:
-  alias: Increase Bedroom Target Temperature
-  sequence:
-  - entity_id: climate.bedroom
-    service: climate.set_temperature
-    data_template:
-      temperature: '{{state_attr(''climate.bedroom'', ''temperature'') + 1}}'
-decrease_bedroom_target:
-  alias: Decrease Bedroom Target Temperature
-  sequence:
-  - entity_id: climate.bedroom
-    service: climate.set_temperature
-    data_template:
-      temperature: '{{state_attr(''climate.bedroom'', ''temperature'') - 1}}'
-increase_ecobee_high:
-  alias: Increase Ecobee High Temperature
-  sequence:
-  - data_template:
-      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'') +
-        1}}'
-      target_temp_low: '{{state_attr(''climate.ecobee'', ''target_temp_low'')|int}}'
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
+  - device_id: 8938d322fd3b11eab38eafa121ce86b4
+    domain: climate
     entity_id: climate.ecobee
-    service: climate.set_temperature
-decrease_ecobee_high:
-  alias: Decrease Ecobee High Temperature
+    type: set_preset_mode
+    preset_mode: Sleep
+  - condition: state
+    entity_id: input_select.comfort_setting
+    state: Sleep
+  - delay: '4:00'
+  - service: homeassistant.turn_off
+    data: {}
+    entity_id: group.downstairs
+  - type: turn_off
+    device_id: b8dc20ca4ebb416eb507e2a549df5ac0
+    entity_id: switch.outdoor_lights
+    domain: switch
+  mode: single
+  icon: mdi:sleep
+unlock_house:
+  alias: Unlock House
+  icon: mdi:lock-open
+  mode: single
   sequence:
-  - data_template:
-      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'') -
-        1}}'
-      target_temp_low: '{{state_attr(''climate.ecobee'', ''target_temp_low'')|int}}'
-    entity_id: climate.ecobee
-    service: climate.set_temperature
-increase_ecobee_low:
-  alias: Increase Ecobee Low Temperature
+  - device_id: 9c2a65fb274142b89bbb1017849b5da2
+    domain: lock
+    entity_id: lock.front_door
+    type: unlock
+  - choose:
+    - conditions:
+      - condition: sun
+        before: sunset
+        after: sunrise
+      sequence:
+      - brightness_pct: 100
+        device_id: f27e62be9d8d4f97b8cda056b0be5211
+        domain: light
+        entity_id: light.streetlight
+        type: turn_on
+      - timeout: 00:10:00
+        wait_template: '{{ is_state("binary_sensor.front_door_contact", "on")}}'
+      - before: sunset
+        condition: sun
+      - device_id: f27e62be9d8d4f97b8cda056b0be5211
+        domain: light
+        entity_id: light.streetlight
+        type: turn_off
+    - conditions:
+      - condition: sun
+        after: sunset
+        before: sunrise
+      sequence:
+      - type: turn_on
+        device_id: 785b4e6d7e274837903def7378d1aacd
+        entity_id: light.entrance_lights
+        domain: light
+        brightness_pct: 100
+    default: []
+wake_up:
+  alias: Wake Up
   sequence:
-  - data_template:
-      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'')|int}}'
-      target_temp_low: '{{state_attr(''climate.ecobee'', ''target_temp_low'') + 1}}'
-    entity_id: climate.ecobee
-    service: climate.set_temperature
-decrease_ecobee_low:
-  alias: Decrease Ecobee Low Temperature
+  - service: light.turn_on
+    data:
+      brightness: 1
+    entity_id:
+    - light.bedroom_lamp_1
+    - light.bedroom_lamp_2
+    - light.bedroom_lamp_3
+  - service: light.turn_on
+    data:
+      brightness: 255
+      transition: 600
+    entity_id:
+    - light.bedroom_lamp_1
+    - light.bedroom_lamp_2
+    - light.bedroom_lamp_3
+  - service: script.home_mode
+    data: {}
+  mode: single
+  icon: mdi:alarm
+turn_off_bedroom:
+  alias: Turn Off Bedroom
   sequence:
-  - data_template:
-      target_temp_high: '{{state_attr(''climate.ecobee'', ''target_temp_high'')|int}}'
-      target_temp_low: '{{state_attr(''climate.ecobee'', ''target_temp_low'') - 1}}'
-    entity_id: climate.ecobee
-    service: climate.set_temperature
-spotify_bedtime:
-  alias: 'Spotify: Bedtime'
-  sequence:
-  - data:
-      entity_id: media_player.bedroom_speaker
-      random_song: true
-      repeat: true
-      uri: spotify:playlist:37i9dQZF1DXdCsscAsbRNz
-    service: spotcast.start
-spotify_gym:
-  alias: 'Spotify: Gym'
-  sequence:
-  - data:
-      entity_id: media_player.basement_pair
-      force_playback: true
-      random_song: true
-      repeat: true
-    service: spotcast.start
-spotify_country:
-  alias: 'Spotify: Country Music'
-  sequence:
-  - data:
-      entity_id: media_player.spotify
-      media_content_id: spotify:playlist:37i9dQZF1DX1lVhptIYRda
-      media_content_type: playlist
-    service: media_player.play_media
+  - type: turn_off
+    device_id: 73752783246048bb9867a8e5dcb6f819
+    entity_id: switch.fountain
+    domain: switch
+  - type: turn_off
+    device_id: 73752783246048bb9867a8e5dcb6f819
+    entity_id: switch.air_purifier
+    domain: switch
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: 'off'
+    entity_id: climate.bedroom
+  mode: single
+  icon: mdi:weather-sunset-up

@@ -1,16 +1,16 @@
 listen_port: 8300
 expose_by_default: false
 entities:
-  switch.cooler:
+  climate.bedroom:
     hidden: false
-    name: Heater
+    name: Cooler
   
   switch.christmas_tree:
     hidden: false
   switch.outdoor_lights:
     hidden: false
 
-  light.office:
+  light.nursery:
     hidden: false
   light.bathroom:
     hidden: false
@@ -22,11 +22,12 @@ entities:
   light.entrance_lights:
     hidden: false
     name: Entrance
-  
+  switch.living_room_tv:
+    name: TV
+    hidden: false
+
   light.upstairs_hallway_lights:
     hidden: false
   light.basement_stairs_lights:
     hidden: false
     name: Basement Hallway
-  light.laundry:
-    hidden: false

@@ -21,6 +21,7 @@ tts:
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
+scene: !include scenes.yaml
 zone: !include zone.yaml
 
 # Entities
@@ -33,11 +34,10 @@ remote: !include entities/remote.yaml
 # Integrations
 camera: !include integrations/camera.yaml
 climate: !include_dir_list integrations/climate
-spotify: !include integrations/spotify.yaml
-spotcast: !include integrations/spotcast.yaml
 hue: !include integrations/hue.yaml
 lutron_caseta: !include integrations/lutron.yaml
 tplink: !include integrations/tplink.yaml
+ifttt: !include integrations/ifttt.yaml
 
 # Assistants
 # homekit: !include assistants/homekit.yaml

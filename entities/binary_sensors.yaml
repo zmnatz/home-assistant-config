@@ -1,7 +1,12 @@
 - platform: template
   sensors: !include_dir_named template/binary_sensor/
 - platform: ping
-  host: 192.168.2.147
+  host: !secret living_room_tv_ip
   name: Living Room TV On
+  count: 2
+  scan_interval: 2
+- platform: ping
+  host: !secret rogue_ip
+  name: Rogue
   count: 2
   scan_interval: 2

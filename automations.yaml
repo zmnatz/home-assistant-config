@@ -14,33 +14,35 @@
     platform: sun
   condition: []
   action:
-  - service: light.turn_on
+  - brightness_pct: 100
+    device_id: f27e62be9d8d4f97b8cda056b0be5211
+    domain: light
     entity_id: light.streetlight
+    type: turn_on
+  - type: turn_on
+    device_id: b8dc20ca4ebb416eb507e2a549df5ac0
+    entity_id: switch.outdoor_lights
+    domain: switch
+  mode: single
 - id: '1568977184659'
   alias: 'Ecobee: Sleep Mode'
   trigger:
-  - at: '20:30'
+  - at: input_datetime.sleep
     platform: time
   - entity_id: binary_sensor.is_home
     platform: state
     to: 'on'
   condition:
-  - after: '20:29'
-    before: 04:29
+  - after: input_datetime.sleep
+    before: input_datetime.morning_start
     condition: time
   - condition: state
     entity_id: binary_sensor.is_home
     state: 'on'
   action:
-  - data:
-      entity_id: script.sleep_mode
+  - entity_id: script.sleep_mode
     service: script.turn_on
-  - delay: '3:00'
-  - condition: state
-    entity_id: group.downstairs
-    state: 'on'
-  - entity_id: group.downstairs
-    service: home_assistant.turn_off
+  mode: single
 - id: '1568977375898'
   alias: 'Ecobee: Home Mode'
   trigger:
@@ -48,8 +50,8 @@
     platform: state
     to: 'on'
   condition:
-  - after: 04:29
-    before: '20:29'
+  - after: input_datetime.morning_start
+    before: input_datetime.sleep
     condition: time
   - condition: state
     entity_id: binary_sensor.is_home
@@ -58,6 +60,7 @@
   - data: {}
     entity_id: script.home_mode
     service: script.turn_on
+  mode: single
 - id: '1568977436434'
   alias: 'Ecobee: Away Mode'
   trigger:
@@ -66,9 +69,9 @@
     to: 'off'
   condition: []
   action:
-  - data:
-      entity_id: script.leaving_home
-    service: script.turn_on
+  - data: {}
+    service: script.leaving_home
+  mode: single
 - id: '1570279316383'
   alias: Morning Start
   trigger:
@@ -76,8 +79,8 @@
     platform: state
     to: 'on'
   condition:
-  - after: 04:30
-    before: '10:00'
+  - after: input_datetime.morning_start
+    before: input_datetime.morning_end
     condition: time
   - condition: state
     entity_id: binary_sensor.is_home
@@ -86,28 +89,9 @@
   - data: {}
     entity_id: group.downstairs
     service: homeassistant.turn_on
-  - data: {}
-    entity_id: script.home_mode
-    service: script.turn_on
-- id: '1570797069497'
-  alias: Weekday Mornings
-  trigger:
-  - at: 05:00
-    platform: time
-  condition:
-  - condition: state
-    entity_id: binary_sensor.is_home
-    state: 'on'
-  - condition: time
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-  action:
-  - entity_id: group.downstairs
-    service: light.turn_on
+  - service: script.home_mode
+    data: {}
+  mode: single
 - id: '1571829369785'
   alias: Cleaning Mode
   description: ''
@@ -130,26 +114,8 @@
   - data:
       message: Denia has arrived
     service: notify.telegram_casey
-- id: '1571829563700'
-  alias: Guest Mode
-  description: ''
-  trigger:
-  - entity_id: lock.front_door
-    platform: state
-    to: unlocked
-  condition:
-  - condition: state
-    entity_id: input_boolean.expecting_guest
-    state: 'on'
-  action:
-  - data:
-      entity_id: input_boolean.expecting_guest
-    service: input_boolean.turn_off
-  - data:
-      entity_id: input_boolean.guest_mode
-    service: input_boolean.turn_on
 - id: '1573778939758'
-  alias: Matching Kitchen Lights
+  alias: 'Matching: Kitchen Lights'
   description: Match fan lights to kitchen lights
   trigger:
   - entity_id: light.kitchen_lights
@@ -160,22 +126,24 @@
       brightness: '{{ trigger.to_state.attributes.brightness or 0 }}'
       entity_id: light.kitchen
     service: light.turn_on
+  mode: single
 - id: '1573782586278'
-  alias: Matching Dining Room Lights
+  alias: 'Matching: Dining Room Lights'
   description: ''
   trigger:
   - entity_id: light.living_room_lights
     platform: state
-  - entity_id: light.kitchen_lights
-    platform: state
+  - platform: state
+    entity_id: light.kitchen_lights
   condition: []
   action:
   - data_template:
       brightness: '{{ trigger.to_state.attributes.brightness or 0 }}'
       entity_id: light.dining_room
     service: light.turn_on
+  mode: single
 - id: '1573782735526'
-  alias: Matching Hallway Lights
+  alias: 'Matching: Hallway Lights'
   description: ''
   trigger:
   - entity_id: light.entrance_lights
@@ -187,143 +155,66 @@
       entity_id:
       - light.hallway
     service: light.turn_on
-- id: '1574081084049'
-  alias: Sunrise
-  description: ''
-  trigger:
-  - event: sunrise
-    platform: sun
-  condition: []
-  action:
-  - service: light.turn_off
-    entity_id: light.streetlight
+  mode: single
 - id: '1584180828929'
-  alias: 'Basement: Entering'
-  description: ''
+  alias: 'Doors: Basement Lighting'
+  description: Turn on and off the basement depending on the stairwell door
   trigger:
   - entity_id: binary_sensor.basement_stairwell_door_contact
     platform: state
-    to: 'on'
   condition: []
   action:
-  - data: {}
-    entity_id: light.basement_stairs_lights
-    service: light.turn_on
-  - condition: state
-    entity_id: group.presence
-    state: home
-  - data: {}
-    entity_id: switch.surveillance_station_home_mode
-    service: switch.turn_on
-  - data: {}
-    entity_id: light.man_cave
-    service: light.turn_on
-- id: '1584181106442'
-  alias: 'Basement: Leaving'
-  description: ''
-  trigger:
-  - entity_id: binary_sensor.basement_stairwell_door_contact
-    platform: state
-    to: 'off'
-  condition: []
-  action:
-  - data: {}
-    entity_id: group.basement
-    service: homeassistant.turn_off
-  - data: {}
-    entity_id: switch.surveillance_station_home_mode
-    service: switch.turn_off
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.basement_stairwell_door_contact
+        state: 'on'
+      sequence:
+      - entity_id: light.basement_stairs_lights
+        service: light.turn_on
+      - entity_id: light.man_cave
+        service: light.turn_on
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.basement_stairwell_door_contact
+        state: 'off'
+      sequence:
+      - entity_id: group.basement
+        service: homeassistant.turn_off
+      - entity_id: switch.surveillance_station_home_mode
+        service: switch.turn_off
+  mode: single
 - id: '1585142258309'
-  alias: Nightlights On
-  description: ''
+  alias: 'Doors: Hallway Nightlights'
+  description: Turn on the hallways lights when a bedroom door opens
   trigger:
   - entity_id: binary_sensor.bedroom_contact
     platform: state
-    to: 'on'
   condition:
-  - condition: state
-    entity_id: binary_sensor.sleep
-    state: 'on'
-  action:
-  - data:
-      brightness: 1
-    entity_id: light.upstairs_hallway_lights
-    service: light.turn_on
-  - after: '4:00'
-    before: '9:00'
+  - after: input_datetime.sleep
+    before: input_datetime.morning_end
     condition: time
-  - data:
-      brightness: 255
-    entity_id: group.downstairs
-    service: homeassistant.turn_on
-- id: '1585142642629'
-  alias: Nightlights Off
-  description: ''
-  trigger:
-  - entity_id: binary_sensor.bedroom_contact
-    platform: state
-    to: 'off'
-  condition:
-  - condition: state
-    entity_id: binary_sensor.sleep
-    state: 'on'
   action:
-  - entity_id: light.upstairs_hallway_lights
-    service: light.turn_off
-- id: '1591741578945'
-  alias: Office On
-  description: ''
-  trigger:
-  - device_id: 77978197a7c443bdbae39c657f196340
-    domain: hue
-    platform: device
-    subtype: turn_on
-    type: remote_button_short_release
-  - device_id: f719827015b648cd934c46b945e3a91e
-    domain: binary_sensor
-    entity_id: binary_sensor.office_door_contact
-    platform: device
-    type: opened
-  condition: []
-  action:
-  - data: {}
-    entity_id: light.office
-    service: light.turn_on
-- id: '1591741640405'
-  alias: Office Off
-  description: ''
-  trigger:
-  - device_id: 77978197a7c443bdbae39c657f196340
-    domain: hue
-    platform: device
-    subtype: turn_off
-    type: remote_button_short_release
-  - device_id: f719827015b648cd934c46b945e3a91e
-    domain: binary_sensor
-    entity_id: binary_sensor.office_door_contact
-    platform: device
-    type: not_opened
-  condition: []
-  action:
-  - data: {}
-    entity_id: light.office
-    service: light.turn_off
-- id: '1591905136176'
-  alias: 'Spotify: Play Bedtime Music'
-  description: ''
-  trigger:
-  - device_id: 587af90b76a24b209102ea60c267e259
-    domain: hue
-    platform: device
-    subtype: dim_down
-    type: remote_button_long_release
-  condition: []
-  action:
-  - data: {}
-    entity_id: script.1591904686961
-    service: script.turn_on
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.bedroom_contact
+        state: 'off'
+      sequence:
+      - entity_id: light.upstairs_hallway_lights
+        service: light.turn_off
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.bedroom_contact
+        state: 'on'
+      sequence:
+      - data:
+          brightness: 5
+        entity_id: light.upstairs_hallway_lights
+        service: light.turn_on
+  mode: single
 - id: '1591905399966'
-  alias: 'Harmony: Turn On Shield'
+  alias: 'Remote: Turn On Shield'
   description: ''
   trigger:
   - device_id: 62c449cd9b29462e80b2143473c53917
@@ -340,8 +231,9 @@
       activity: SHIELD TV
     entity_id: remote.harmony
     service: remote.turn_on
+  mode: single
 - id: '1591905462398'
-  alias: 'Harmony: Turn Off'
+  alias: 'Remote: Turn Off Basement TV'
   description: ''
   trigger:
   - device_id: 62c449cd9b29462e80b2143473c53917
@@ -354,26 +246,153 @@
   - data: {}
     entity_id: remote.harmony
     service: remote.turn_off
+  mode: single
 - id: '1593732685749'
-  alias: Adblock Off
+  alias: Adguard Sync
   description: ''
   trigger:
   - entity_id: switch.adguard_protection
     platform: state
-    to: 'off'
   condition: []
   action:
-  - data:
-      duration: 00:00:00
-    service: pi_hole.disable
-- id: '1593732979044'
-  alias: Adguard On
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: switch.adguard_protection
+        state: 'off'
+      sequence:
+      - service: pi_hole.disable
+        data:
+          duration: 00:00:00
+    - conditions:
+      - condition: state
+        entity_id: switch.adguard_protection
+        state: 'on'
+      sequence:
+      - service: pi_hole.enable
+        data: {}
+- id: '1596306245699'
+  alias: Nursery Fan Off
   description: ''
   trigger:
-  - entity_id: switch.adguard_protection
-    platform: state
-    to: 'on'
+  - device_id: 77978197a7c443bdbae39c657f196340
+    domain: hue
+    platform: device
+    subtype: turn_off
+    type: remote_button_long_release
   condition: []
   action:
-  - data: {}
-    service: pi_hole.enable
+  - device_id: 661badc06b4548f7b96420bc6195d30b
+    domain: switch
+    entity_id: switch.nursery_fan
+    type: turn_off
+  mode: single
+- id: '1596632295758'
+  alias: Arrive Home
+  description: ''
+  trigger:
+  - entity_id: person.casey
+    platform: state
+    to: home
+  - entity_id: person.zaven
+    platform: state
+    to: home
+  condition: []
+  action:
+  - service: script.unlock_house
+    data: {}
+  mode: single
+- id: '1600221028451'
+  alias: Sunrise
+  description: ''
+  trigger:
+  - event: sunrise
+    platform: sun
+  condition: []
+  action:
+  - device_id: f27e62be9d8d4f97b8cda056b0be5211
+    domain: light
+    entity_id: light.streetlight
+    type: turn_off
+  - type: turn_off
+    device_id: b8dc20ca4ebb416eb507e2a549df5ac0
+    entity_id: switch.outdoor_lights
+    domain: switch
+  mode: single
+- id: '1603197198931'
+  alias: Wake Up
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.wake_up_casey
+  - platform: time
+    at: input_datetime.wake_up_zaven
+  condition:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  - condition: state
+    entity_id: group.presence
+    state: home
+  action:
+  - service: script.turn_on
+    data: {}
+    entity_id: script.wake_up
+  mode: single
+- id: '1604579621940'
+  alias: 'Bedroom: Off'
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.bedroom_off
+  condition: []
+  action:
+  - wait_template: '{{ is_state("light.bathroom", "off")}}'
+    continue_on_timeout: true
+    timeout: 00:15:00
+  - service: script.turn_off_bedroom
+    data: {}
+  mode: single
+- id: '1604926041330'
+  alias: 'Arrive Home: Casey'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: person.casey
+    to: home
+  condition: []
+  action:
+  - delay: 00:05
+  - service: notify.telegram_casey
+    data:
+      message: Did we lock the car?
+  mode: single
+- id: '1607030355696'
+  alias: Leaving Work
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.zaven
+    zone: zone.work
+    event: leave
+  condition:
+  - condition: time
+    after: '14:00'
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  action:
+  - service: notify.telegram_casey
+    data:
+      message: Zaven is freeeeeeeeeeeeeeeeeeee!
+  - service: notify.telegram_zaven
+    data:
+      message: Zaven is freeeeeeeeeeeeeeeeeeee!
+  mode: single

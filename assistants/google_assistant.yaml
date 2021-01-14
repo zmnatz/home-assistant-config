@@ -15,14 +15,20 @@ entity_config:
   light.nursery:
     room: Nursery
     expose: true
+  switch.nursery_fan:
+    room: Nursery
+    expose: true
   light.guest_bedroom:
+    room: Guest Bedroom
+    expose: true
+  light.guest_fan:
     room: Guest Bedroom
     expose: true
   light.upstairs_hallway_lights:
     room: Upstairs
     aliases:
     - stairwell
-    - upstairs hallyway
+    - upstairs hallway
     expose: true
  
   light.bedroom:
@@ -53,6 +59,13 @@ entity_config:
   light.dining_room:
     room: Downstairs
     expose: true
+  switch.living_room_tv:
+    room: Living Room
+    expose: true
+    aliases:
+      - Living Room TV
+      - Television
+      - TV
 
   light.basement_stairs_lights:
     room: Basement
@@ -60,12 +73,14 @@ entity_config:
     expose: true
   light.man_cave:
     room: Basement
-    name: Man Cave
+    name: Gym
     expose: true
+    aliases:
+      - Man Cave
   light.laundry:
     room: Basement
     name: Laundry
     aliases:
-     - Laundry Lights
-     - Laundry Room
+    - Laundry Lights
+    - Laundry Room
     expose: true

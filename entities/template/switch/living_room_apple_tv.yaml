@@ -1,0 +1,12 @@
+friendly_name: Apple TV
+icon_template: mdi:apple
+value_template: 'false'
+turn_on:
+  service: ifttt.trigger
+  data:
+    event: send_caavo_command
+    value1: change to apple TV
+turn_off:
+  service: ifttt.trigger
+  data:
+    event: TV Off

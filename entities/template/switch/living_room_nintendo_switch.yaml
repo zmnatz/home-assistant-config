@@ -1,0 +1,12 @@
+friendly_name: Nintendo Switch
+icon_template: mdi:nintendo-switch
+value_template: 'false'
+turn_on:
+  service: ifttt.trigger
+  data:
+    event: send_caavo_command
+    value1: change to nintendo switch
+turn_off:
+  service: ifttt.trigger
+  data:
+    event: TV Off

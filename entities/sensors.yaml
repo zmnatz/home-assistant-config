@@ -1,11 +1,6 @@
 - platform: waze_travel_time
-  name: School
-  origin: device_tracker.caseys_iphone
-  destination: !secret school_addr
-  region: 'US'
-- platform: waze_travel_time
   name: Work
-  origin: device_tracker.zaven_phone
+  origin: device_tracker.zaven_iphone
   destination: !secret work_addr
   region: 'US'
 - platform: waze_travel_time
@@ -15,12 +10,8 @@
   region: 'US'
 - platform: waze_travel_time
   name: Zaven ETA
-  origin: device_tracker.zaven_phone
+  origin: device_tracker.zaven_iphone
   destination: !secret home_addr
   region: 'US'
-- platform: cert_expiry
-  host: !secret domain
 - platform: template
-  sensors: !include_dir_named template/sensors/
-- platform: spotcast
-  
+  sensors: !include_dir_named template/sensors/  

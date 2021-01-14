@@ -1,0 +1,27 @@
+- id: '1597758128899'
+  name: Sunrise
+  entities:
+    light.bedroom:
+      state: true
+      brightness: 255
+      transition: 600
+- id: '1604319197611'
+  name: To Work
+  entities:
+    lock.front_door:
+      lock_state: unlocked
+      friendly_name: Front Door
+      state: unlocked
+    group.downstairs:
+      entity_id:
+      - light.kitchen_lights
+      - light.kitchen
+      - light.living_room_lights
+      - light.dining_room
+      - light.hallway
+      - light.entrance_lights
+      order: 1
+      friendly_name: Downstairs
+      icon: mdi:power
+      state: 'off'
+  icon: mdi:car

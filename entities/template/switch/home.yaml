@@ -1,0 +1,8 @@
+friendly_name: Home Mode
+icon_template: mdi:home
+value_template: >-
+  {{ is_state('input_select.comfort_setting', 'Home')}}
+turn_on:
+  service: script.home_mode
+turn_off:
+  service: script.home_mode
