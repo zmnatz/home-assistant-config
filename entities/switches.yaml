@@ -1,7 +1,7 @@
-- platform: synologysurveillance
-  url: !secret syno_url
-  username: !secret syno_user
-  password: !secret syno_password
-  verify_ssl: false
+# - platform: synologysurveillance
+#   url: !secret syno_url
+#   username: !secret syno_user
+#   password: !secret syno_password
+#   verify_ssl: false
 - platform: template
   switches: !include_dir_named template/switch/

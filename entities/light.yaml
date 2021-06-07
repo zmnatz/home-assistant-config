@@ -5,8 +5,18 @@
   - light.bathroom_2
   - light.bathroom_3
 - platform: group
+  name: Bedroom Fan
+  entities: 
+    - light.bedroom_1
+    - light.bedroom_2
+- platform: group
   name: Bedroom Lamp
   entities:
     - light.bedroom_lamp_1
     - light.bedroom_lamp_2
     - light.bedroom_lamp_3
+- platform: group
+  name: Nursery Lamp
+  entities:
+    - light.nursery_1
+    - light.nursery_2

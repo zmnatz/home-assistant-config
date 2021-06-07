@@ -81,7 +81,7 @@ sensor.casey_eta:
 sensor.work:
   icon: mdi:office-building
 light.bedroom:
-  icon: mdi:hotel
+  icon: mdi:bed
 light.office:
   icon: mdi:desk-lamp
 light.laundry_light:
@@ -100,3 +100,11 @@ automation.wake_up:
   icon: mdi:alarm
 camera.front_door_cam: {}
 camera.basement_cam: {}
+automation.wake_up_casey:
+  icon: mdi:face-woman
+automation.wake_up_zaven:
+  icon: mdi:face
+light.bedroom_fan:
+  icon: mdi:fan
+switch.basement_nintendo_switch:
+  icon: mdi:nintendo-switch

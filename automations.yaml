@@ -19,10 +19,6 @@
     domain: light
     entity_id: light.streetlight
     type: turn_on
-  - type: turn_on
-    device_id: b8dc20ca4ebb416eb507e2a549df5ac0
-    entity_id: switch.outdoor_lights
-    domain: switch
   mode: single
 - id: '1568977184659'
   alias: 'Ecobee: Sleep Mode'
@@ -72,26 +68,6 @@
   - data: {}
     service: script.leaving_home
   mode: single
-- id: '1570279316383'
-  alias: Morning Start
-  trigger:
-  - entity_id: group.downstairs
-    platform: state
-    to: 'on'
-  condition:
-  - after: input_datetime.morning_start
-    before: input_datetime.morning_end
-    condition: time
-  - condition: state
-    entity_id: binary_sensor.is_home
-    state: 'on'
-  action:
-  - data: {}
-    entity_id: group.downstairs
-    service: homeassistant.turn_on
-  - service: script.home_mode
-    data: {}
-  mode: single
 - id: '1571829369785'
   alias: Cleaning Mode
   description: ''
@@ -117,57 +93,24 @@
 - id: '1573778939758'
   alias: 'Matching: Kitchen Lights'
   description: Match fan lights to kitchen lights
-  trigger:
-  - entity_id: light.kitchen_lights
-    platform: state
-  condition: []
-  action:
-  - data_template:
-      brightness: '{{ trigger.to_state.attributes.brightness or 0 }}'
-      entity_id: light.kitchen
-    service: light.turn_on
-  mode: single
-- id: '1573782586278'
-  alias: 'Matching: Dining Room Lights'
-  description: ''
-  trigger:
-  - entity_id: light.living_room_lights
-    platform: state
-  - platform: state
-    entity_id: light.kitchen_lights
-  condition: []
-  action:
-  - data_template:
-      brightness: '{{ trigger.to_state.attributes.brightness or 0 }}'
-      entity_id: light.dining_room
-    service: light.turn_on
-  mode: single
-- id: '1573782735526'
-  alias: 'Matching: Hallway Lights'
-  description: ''
-  trigger:
-  - entity_id: light.entrance_lights
-    platform: state
-  condition: []
-  action:
-  - data_template:
-      brightness: '{{ trigger.to_state.attributes.brightness or 0 }}'
-      entity_id:
-      - light.hallway
-    service: light.turn_on
+  use_blueprint:
+    path: match_lighting.yaml
+    input:
+      source_light: light.kitchen_lights
+      target_light: light.kitchen
   mode: single
 - id: '1584180828929'
   alias: 'Doors: Basement Lighting'
   description: Turn on and off the basement depending on the stairwell door
   trigger:
-  - entity_id: binary_sensor.basement_stairwell_door_contact
+  - entity_id: binary_sensor.stairwell_door_contact
     platform: state
   condition: []
   action:
   - choose:
     - conditions:
       - condition: state
-        entity_id: binary_sensor.basement_stairwell_door_contact
+        entity_id: binary_sensor.stairwell_door_contact
         state: 'on'
       sequence:
       - entity_id: light.basement_stairs_lights
@@ -176,61 +119,13 @@
         service: light.turn_on
     - conditions:
       - condition: state
-        entity_id: binary_sensor.basement_stairwell_door_contact
+        entity_id: binary_sensor.stairwell_door_contact
         state: 'off'
       sequence:
       - entity_id: group.basement
         service: homeassistant.turn_off
       - entity_id: switch.surveillance_station_home_mode
         service: switch.turn_off
-  mode: single
-- id: '1585142258309'
-  alias: 'Doors: Hallway Nightlights'
-  description: Turn on the hallways lights when a bedroom door opens
-  trigger:
-  - entity_id: binary_sensor.bedroom_contact
-    platform: state
-  condition:
-  - after: input_datetime.sleep
-    before: input_datetime.morning_end
-    condition: time
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.bedroom_contact
-        state: 'off'
-      sequence:
-      - entity_id: light.upstairs_hallway_lights
-        service: light.turn_off
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.bedroom_contact
-        state: 'on'
-      sequence:
-      - data:
-          brightness: 5
-        entity_id: light.upstairs_hallway_lights
-        service: light.turn_on
-  mode: single
-- id: '1591905399966'
-  alias: 'Remote: Turn On Shield'
-  description: ''
-  trigger:
-  - device_id: 62c449cd9b29462e80b2143473c53917
-    domain: hue
-    platform: device
-    subtype: dim_up
-    type: remote_button_long_release
-  condition:
-  - condition: state
-    entity_id: remote.harmony
-    state: 'off'
-  action:
-  - data:
-      activity: SHIELD TV
-    entity_id: remote.harmony
-    service: remote.turn_on
   mode: single
 - id: '1591905462398'
   alias: 'Remote: Turn Off Basement TV'
@@ -271,22 +166,6 @@
       sequence:
       - service: pi_hole.enable
         data: {}
-- id: '1596306245699'
-  alias: Nursery Fan Off
-  description: ''
-  trigger:
-  - device_id: 77978197a7c443bdbae39c657f196340
-    domain: hue
-    platform: device
-    subtype: turn_off
-    type: remote_button_long_release
-  condition: []
-  action:
-  - device_id: 661badc06b4548f7b96420bc6195d30b
-    domain: switch
-    entity_id: switch.nursery_fan
-    type: turn_off
-  mode: single
 - id: '1596632295758'
   alias: Arrive Home
   description: ''
@@ -314,48 +193,6 @@
     domain: light
     entity_id: light.streetlight
     type: turn_off
-  - type: turn_off
-    device_id: b8dc20ca4ebb416eb507e2a549df5ac0
-    entity_id: switch.outdoor_lights
-    domain: switch
-  mode: single
-- id: '1603197198931'
-  alias: Wake Up
-  description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.wake_up_casey
-  - platform: time
-    at: input_datetime.wake_up_zaven
-  condition:
-  - condition: time
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-  - condition: state
-    entity_id: group.presence
-    state: home
-  action:
-  - service: script.turn_on
-    data: {}
-    entity_id: script.wake_up
-  mode: single
-- id: '1604579621940'
-  alias: 'Bedroom: Off'
-  description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.bedroom_off
-  condition: []
-  action:
-  - wait_template: '{{ is_state("light.bathroom", "off")}}'
-    continue_on_timeout: true
-    timeout: 00:15:00
-  - service: script.turn_off_bedroom
-    data: {}
   mode: single
 - id: '1604926041330'
   alias: 'Arrive Home: Casey'
@@ -371,28 +208,88 @@
     data:
       message: Did we lock the car?
   mode: single
-- id: '1607030355696'
+- id: '1610999309477'
+  alias: Laundry Lights
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light.yaml
+    input:
+      no_motion_wait: 902
+      motion_entity: binary_sensor.laundry_sensor_motion
+      light_target:
+        entity_id: light.laundry
+- id: '1610999476218'
   alias: Leaving Work
   description: ''
+  use_blueprint:
+    path: homeassistant/notify_leaving_zone.yaml
+    input:
+      zone_entity: zone.work
+      notify_device: a9f77d00cf55420aa7adc6088cc06fdc
+      person_entity: person.zaven
+- id: '1611233481278'
+  alias: Wake Up Zaven
+  description: ''
+  use_blueprint:
+    path: wake_up.yaml
+    input:
+      wake_up_time: input_datetime.wake_up_zaven
+- id: '1611233498710'
+  alias: Wake Up Casey
+  description: ''
+  use_blueprint:
+    path: wake_up.yaml
+    input:
+      wake_up_time: input_datetime.wake_up_casey
+- id: '1611234351625'
+  alias: 'Match: Hallway Lighting'
+  description: ''
+  use_blueprint:
+    path: match_lighting.yaml
+    input:
+      source_light: light.entrance_lights
+      target_light: light.hallway
+- id: '1611355660412'
+  alias: 'Match: Dining Room'
+  description: ''
+  use_blueprint:
+    path: match_lighting.yaml
+    input:
+      source_light:
+      - light.kitchen_lights
+      - light.living_room_lights
+      target_light: light.dining_room
+- alias: Update USPS Mail Camera Path on Hass Restart
   trigger:
-  - platform: zone
-    entity_id: person.zaven
-    zone: zone.work
-    event: leave
-  condition:
-  - condition: time
-    after: '14:00'
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
+  - platform: state
+    entity_id: sensor.mail_updated
+  - platform: homeassistant
+    event: start
   action:
-  - service: notify.telegram_casey
-    data:
-      message: Zaven is freeeeeeeeeeeeeeeeeeee!
-  - service: notify.telegram_zaven
-    data:
-      message: Zaven is freeeeeeeeeeeeeeeeeeee!
+  - service: local_file.update_file_path
+    data_template:
+      entity_id: camera.mail_usps
+      file_path: '{{ states(''sensor.mail_image_system_path'') }}'
+  id: 16dd6f238bda4879a7453de7fa8fcdb3
+- id: '1621340108636'
+  alias: Freezer Check
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: b8dc20ca4ebb416eb507e2a549df5ac0
+    entity_id: switch.freezer
+    domain: switch
+  condition: []
+  action:
+  - device_id: a9f77d00cf55420aa7adc6088cc06fdc
+    domain: mobile_app
+    type: notify
+    title: ''
+    message: The Freezer is Off
+  - device_id: 261400ab5e1c4135b55792f8d7f5ba5d
+    domain: mobile_app
+    type: notify
+    title: ''
+    message: The Freezer is Off
   mode: single

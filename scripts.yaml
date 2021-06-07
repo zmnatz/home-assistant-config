@@ -35,7 +35,7 @@ leaving_home:
       hvac_mode: 'off'
     entity_id: climate.bedroom
     service: climate.set_hvac_mode
-  - device_id: 9c2a65fb274142b89bbb1017849b5da2
+  - device_id: 5cb0bbaab2a94d110940d1795257f2c1
     domain: lock
     entity_id: lock.front_door
     type: lock
@@ -50,22 +50,12 @@ sleep_mode:
     service: input_select.select_option
   - entity_id: lock.front_door
     service: lock.lock
-  - data:
-      hvac_mode: heat
-    entity_id: climate.bedroom
-    service: climate.set_hvac_mode
-  - service: climate.set_temperature
-    data:
-      temperature: 64
-    entity_id: climate.bedroom
   - service: switch.turn_on
     data: {}
-    entity_id: switch.fountain
-  - entity_id: switch.air_purifier
-    service: switch.turn_on
-  - condition: state
-    entity_id: input_boolean.guest_mode
-    state: 'off'
+    target:
+      entity_id:
+      - switch.fountain
+      - switch.air_purifier
   - device_id: 8938d322fd3b11eab38eafa121ce86b4
     domain: climate
     entity_id: climate.ecobee
@@ -74,14 +64,6 @@ sleep_mode:
   - condition: state
     entity_id: input_select.comfort_setting
     state: Sleep
-  - delay: '4:00'
-  - service: homeassistant.turn_off
-    data: {}
-    entity_id: group.downstairs
-  - type: turn_off
-    device_id: b8dc20ca4ebb416eb507e2a549df5ac0
-    entity_id: switch.outdoor_lights
-    domain: switch
   mode: single
   icon: mdi:sleep
 unlock_house:
@@ -89,7 +71,7 @@ unlock_house:
   icon: mdi:lock-open
   mode: single
   sequence:
-  - device_id: 9c2a65fb274142b89bbb1017849b5da2
+  - device_id: 5cb0bbaab2a94d110940d1795257f2c1
     domain: lock
     entity_id: lock.front_door
     type: unlock
@@ -162,3 +144,25 @@ turn_off_bedroom:
     entity_id: climate.bedroom
   mode: single
   icon: mdi:weather-sunset-up
+turn_on_apple_tv:
+  sequence:
+  - service: remote.send_command
+    target:
+      device_id: f101f71aa591824df3115185b3c7392f
+    data:
+      command: wakeup
+  mode: single
+  alias: Turn On Apple TV
+  icon: mdi:apple
+turn_off_apple_tv:
+  alias: Turn Off Apple TV
+  sequence:
+  - service: remote.send_command
+    target:
+      device_id: f101f71aa591824df3115185b3c7392f
+    data:
+      command:
+      - home_hold
+      - select
+  mode: single
+  icon: mdi:apple

@@ -1,0 +1,23 @@
+blueprint:
+  name: Match Lighting
+  domain: automation
+  input:
+    source_light:
+      name: Source Light
+      selector:
+        entity:
+          domain: light
+    target_light:
+      name: Target Light
+      selector:
+        entity:
+          domain: light
+
+trigger:
+  - entity_id: !input source_light
+    platform: state
+action:
+- data_template:
+    brightness: '{{ trigger.to_state.attributes.brightness or 0 }}'
+    entity_id: !input target_light
+  service: light.turn_on

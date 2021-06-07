@@ -38,6 +38,7 @@ hue: !include integrations/hue.yaml
 lutron_caseta: !include integrations/lutron.yaml
 tplink: !include integrations/tplink.yaml
 ifttt: !include integrations/ifttt.yaml
+spotify: !include integrations/spotify.yaml
 
 # Assistants
 # homekit: !include assistants/homekit.yaml

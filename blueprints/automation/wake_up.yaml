@@ -1,0 +1,29 @@
+blueprint:
+  name: Wake Up
+  description: Gradually turn on lights to emulate sunrise at specific time
+  domain: automation
+  input:
+    wake_up_time:
+      name: Timer
+      description: This timer will set time of day for the alarm
+      selector:
+        entity:
+          domain: input_datetime
+
+trigger:
+  platform: time
+  at: !input wake_up_time
+
+condition:
+  - condition: or
+    conditions:
+    - condition: time
+      weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+action:
+  - service: script.turn_on
+    entity_id: script.wake_up

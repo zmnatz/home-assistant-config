@@ -1,0 +1,77 @@
+# Be aware that this file contains options that could potentially break the add-on.
+# Make sure you know what you are doing before editing this file!
+server_name: chat.caseyandzaven.com
+pid_file: /homeserver.pid
+federation_ip_range_blacklist:
+- 127.0.0.0/8
+- 10.0.0.0/8
+- 172.16.0.0/12
+- 192.168.0.0/16
+- 100.64.0.0/10
+- 169.254.0.0/16
+- ::1/128
+- fe80::/64
+- fc00::/7
+listeners:
+- port: 8448
+  tls: true
+  type: http
+  x_forwarded: true
+  resources:
+  - names:
+    - client
+    - federation
+    compress: false
+  bind_addresses:
+  - 0.0.0.0
+limit_remote_rooms: null
+retention: null
+acme:
+  enabled: false
+  port: 80
+  bind_addresses:
+  - '::'
+  - 0.0.0.0
+  reprovision_threshold: 30
+  domain: matrix.example.com
+  account_key_file: /acme_account.key
+caches:
+  per_cache_factors: null
+database:
+  name: sqlite3
+  args:
+    database: /share/matrix/matrix.db
+log_config: /data/matrix/chat.caseyandzaven.com.log.config
+media_store_path: /share/matrix/media
+url_preview_accept_language: null
+account_validity: null
+registration_shared_secret: CdN12NO5oIo@vXUya6oFEzGSATQGVDd^wGQdhV^;30Xc@uHn9#
+account_threepid_delegates: null
+metrics_flags: null
+report_stats: false
+macaroon_secret_key: Q+LE01QZ9.y:&1Tya,AMM~OnlhbLUd3Lh@V1jwGOu:-sLXxz4~
+form_secret: cbzcRWwfCIPoW@oBLt=z=ojfRBHS.5DC0v#ug^Zbu:8rQ=~@;Q
+signing_key_path: /data/matrix/chat.caseyandzaven.com.signing.key
+old_signing_keys: null
+trusted_key_servers:
+- server_name: matrix.org
+saml2_config:
+  user_mapping_provider:
+    config: null
+oidc_config:
+  user_mapping_provider:
+    config:
+      localpart_template: '{{ user.preferred_username }}'
+sso: null
+password_config:
+  policy: null
+email: null
+password_providers: null
+spam_checker: null
+opentracing: null
+enable_registration: true
+uploads_path: /share/matrix/uploads
+max_upload_size: 200M
+no_tls: false
+tls_certificate_path: /ssl/fullchain.pem
+tls_private_key_path: /ssl/privkey.pem
