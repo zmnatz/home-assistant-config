@@ -7,141 +7,6 @@
   action:
   - delay: 0:01
   - service: homekit.start
-- id: '1568893048333'
-  alias: Sunset
-  trigger:
-  - event: sunset
-    platform: sun
-  condition: []
-  action:
-  - brightness_pct: 100
-    device_id: f27e62be9d8d4f97b8cda056b0be5211
-    domain: light
-    entity_id: light.streetlight
-    type: turn_on
-  mode: single
-- id: '1568977184659'
-  alias: 'Ecobee: Sleep Mode'
-  trigger:
-  - at: input_datetime.sleep
-    platform: time
-  - entity_id: binary_sensor.is_home
-    platform: state
-    to: 'on'
-  condition:
-  - after: input_datetime.sleep
-    before: input_datetime.morning_start
-    condition: time
-  - condition: state
-    entity_id: binary_sensor.is_home
-    state: 'on'
-  action:
-  - entity_id: script.sleep_mode
-    service: script.turn_on
-  mode: single
-- id: '1568977375898'
-  alias: 'Ecobee: Home Mode'
-  trigger:
-  - entity_id: binary_sensor.is_home
-    platform: state
-    to: 'on'
-  condition:
-  - after: input_datetime.morning_start
-    before: input_datetime.sleep
-    condition: time
-  - condition: state
-    entity_id: binary_sensor.is_home
-    state: 'on'
-  action:
-  - data: {}
-    entity_id: script.home_mode
-    service: script.turn_on
-  mode: single
-- id: '1568977436434'
-  alias: 'Ecobee: Away Mode'
-  trigger:
-  - entity_id: binary_sensor.is_home
-    platform: state
-    to: 'off'
-  condition: []
-  action:
-  - data: {}
-    service: script.leaving_home
-  mode: single
-- id: '1571829369785'
-  alias: Cleaning Mode
-  description: ''
-  trigger:
-  - entity_id: lock.front_door
-    from: locked
-    platform: state
-    to: unlocked
-  condition:
-  - condition: state
-    entity_id: input_boolean.cleaning_mode
-    state: 'on'
-  action:
-  - data:
-      entity_id: group.all_lights
-    service: light.turn_on
-  - data:
-      message: Denia has arrived
-    service: notify.telegram_zaven
-  - data:
-      message: Denia has arrived
-    service: notify.telegram_casey
-- id: '1573778939758'
-  alias: 'Matching: Kitchen Lights'
-  description: Match fan lights to kitchen lights
-  use_blueprint:
-    path: match_lighting.yaml
-    input:
-      source_light: light.kitchen_lights
-      target_light: light.kitchen
-  mode: single
-- id: '1584180828929'
-  alias: 'Doors: Basement Lighting'
-  description: Turn on and off the basement depending on the stairwell door
-  trigger:
-  - entity_id: binary_sensor.stairwell_door_contact
-    platform: state
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.stairwell_door_contact
-        state: 'on'
-      sequence:
-      - entity_id: light.basement_stairs_lights
-        service: light.turn_on
-      - entity_id: light.man_cave
-        service: light.turn_on
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.stairwell_door_contact
-        state: 'off'
-      sequence:
-      - entity_id: group.basement
-        service: homeassistant.turn_off
-      - entity_id: switch.surveillance_station_home_mode
-        service: switch.turn_off
-  mode: single
-- id: '1591905462398'
-  alias: 'Remote: Turn Off Basement TV'
-  description: ''
-  trigger:
-  - device_id: 62c449cd9b29462e80b2143473c53917
-    domain: hue
-    platform: device
-    subtype: turn_off
-    type: remote_button_long_release
-  condition: []
-  action:
-  - data: {}
-    entity_id: remote.harmony
-    service: remote.turn_off
-  mode: single
 - id: '1593732685749'
   alias: Adguard Sync
   description: ''
@@ -173,51 +38,56 @@
   - entity_id: person.casey
     platform: state
     to: home
-  - entity_id: person.zaven
-    platform: state
-    to: home
+    id: casey_home
+  - platform: device
+    device_id: 261400ab5e1c4135b55792f8d7f5ba5d
+    domain: device_tracker
+    entity_id: device_tracker.zaven_iphone
+    type: enters
+    id: zaven_home
+    zone: zone.home
   condition: []
   action:
   - service: script.unlock_house
     data: {}
+  - condition: trigger
+    id: casey_home
+  - delay: 00:05
+  - device_id: a9f77d00cf55420aa7adc6088cc06fdc
+    domain: mobile_app
+    type: notify
+    title: ''
+    message: Did we lock the car?
   mode: single
 - id: '1600221028451'
-  alias: Sunrise
+  alias: Sun Changes
   description: ''
   trigger:
   - event: sunrise
     platform: sun
+    id: sunrise
+  - platform: sun
+    event: sunset
+    id: sunset
   condition: []
   action:
-  - device_id: f27e62be9d8d4f97b8cda056b0be5211
-    domain: light
-    entity_id: light.streetlight
-    type: turn_off
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: sunrise
+      sequence:
+      - service: light.turn_off
+        target:
+          entity_id: light.streetlights
+    - conditions:
+      - condition: trigger
+        id: sunset
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.streetlights
+    default: []
   mode: single
-- id: '1604926041330'
-  alias: 'Arrive Home: Casey'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: person.casey
-    to: home
-  condition: []
-  action:
-  - delay: 00:05
-  - service: notify.telegram_casey
-    data:
-      message: Did we lock the car?
-  mode: single
-- id: '1610999309477'
-  alias: Laundry Lights
-  description: ''
-  use_blueprint:
-    path: homeassistant/motion_light.yaml
-    input:
-      no_motion_wait: 902
-      motion_entity: binary_sensor.laundry_sensor_motion
-      light_target:
-        entity_id: light.laundry
 - id: '1610999476218'
   alias: Leaving Work
   description: ''
@@ -241,24 +111,6 @@
     path: wake_up.yaml
     input:
       wake_up_time: input_datetime.wake_up_casey
-- id: '1611234351625'
-  alias: 'Match: Hallway Lighting'
-  description: ''
-  use_blueprint:
-    path: match_lighting.yaml
-    input:
-      source_light: light.entrance_lights
-      target_light: light.hallway
-- id: '1611355660412'
-  alias: 'Match: Dining Room'
-  description: ''
-  use_blueprint:
-    path: match_lighting.yaml
-    input:
-      source_light:
-      - light.kitchen_lights
-      - light.living_room_lights
-      target_light: light.dining_room
 - alias: Update USPS Mail Camera Path on Hass Restart
   trigger:
   - platform: state
@@ -271,25 +123,177 @@
       entity_id: camera.mail_usps
       file_path: '{{ states(''sensor.mail_image_system_path'') }}'
   id: 16dd6f238bda4879a7453de7fa8fcdb3
-- id: '1621340108636'
-  alias: Freezer Check
+- id: '1624832277642'
+  alias: Nursery Music Loop
   description: ''
   trigger:
   - platform: device
+    device_id: ce8fe1ee4b9f4c2a84629930787765f3
+    domain: media_player
+    entity_id: media_player.nursery_speaker
+    type: idle
+  - platform: device
+    device_id: ce8fe1ee4b9f4c2a84629930787765f3
+    domain: media_player
+    entity_id: media_player.nursery_speaker
+    type: paused
+  - platform: device
+    device_id: ce8fe1ee4b9f4c2a84629930787765f3
+    domain: media_player
+    entity_id: media_player.nursery_speaker
     type: turned_off
-    device_id: b8dc20ca4ebb416eb507e2a549df5ac0
-    entity_id: switch.freezer
-    domain: switch
+  condition:
+  - condition: state
+    entity_id: switch.white_noise
+    state: 'on'
+  action:
+  - service: media_player.play_media
+    entity_id: media_player.nursery_speaker
+    data:
+      media_content_id: http://www.gstatic.com/voice_delight/sounds/long/ocean.mp3
+      media_content_type: url
+  mode: single
+- id: '1624832716801'
+  alias: Nursery Music Toggle
+  description: ''
+  trigger:
+  - device_id: 77978197a7c443bdbae39c657f196340
+    domain: hue
+    platform: device
+    type: remote_button_long_release
+    subtype: dim_down
   condition: []
   action:
-  - device_id: a9f77d00cf55420aa7adc6088cc06fdc
-    domain: mobile_app
-    type: notify
-    title: ''
-    message: The Freezer is Off
+  - service: switch.toggle
+    target:
+      entity_id: switch.white_noise
+  mode: single
+- id: '1625754961035'
+  alias: Nursery Sleeping
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: switch.white_noise
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: switch.white_noise
+        state: 'on'
+      sequence:
+      - device_id: 8938d322fd3b11eab38eafa121ce86b4
+        domain: climate
+        entity_id: climate.ecobee
+        type: set_preset_mode
+        preset_mode: Sleep
+      - type: turn_on
+        device_id: dbc45aa30675419796d297f37482837f
+        entity_id: switch.nursery_room_fan
+        domain: switch
+    - conditions:
+      - condition: state
+        entity_id: switch.white_noise
+        state: 'off'
+      sequence:
+      - service: ecobee.resume_program
+        data:
+          resume_all: true
+      - condition: state
+        entity_id: binary_sensor.nursery_occupancy
+        state: 'off'
+      - type: turn_off
+        device_id: dbc45aa30675419796d297f37482837f
+        entity_id: switch.nursery_room_fan
+        domain: switch
+    default: []
+  mode: single
+- id: '1626091307899'
+  alias: Comfort Settings
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.is_home
+    id: home
+    to: 'on'
+  - platform: time
+    at: input_datetime.sleep
+    id: sleep
+  - platform: state
+    entity_id: binary_sensor.is_home
+    id: away
+    to: 'off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: home
+      sequence:
+      - service: script.home_mode
+    - conditions:
+      - condition: trigger
+        id: away
+      sequence:
+      - service: script.leaving_home
+    - conditions:
+      - condition: trigger
+        id: sleep
+      - condition: state
+        entity_id: binary_sensor.is_home
+        state: 'on'
+      sequence:
+      - service: script.sleep_mode
+    default: []
+  mode: single
+- id: '1629989041599'
+  alias: Vacuum House
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.vacuum
+  condition:
+  - condition: state
+    entity_id: binary_sensor.is_home
+    state: 'on'
+  action:
+  - device_id: 993acbd32f40399e3ddc79cb1b168bca
+    domain: vacuum
+    entity_id: vacuum.roborock_s4
+    type: clean
+  mode: single
+- id: '1635208283021'
+  alias: Water Detected
+  description: ''
+  trigger:
+  - type: moist
+    platform: device
+    device_id: e2641cdbd4220be3c6f49ee00162c487
+    entity_id: binary_sensor.water_heater_leak_leak
+    domain: binary_sensor
+  - type: moist
+    platform: device
+    device_id: ae7403119e0b26dbc8d89c880db18f5c
+    entity_id: binary_sensor.sump_pit_water
+    domain: binary_sensor
+  - device_id: 6a38d6efa5ccd0b9f976bd91d1ca188c
+    domain: zha
+    platform: device
+    type: device_offline
+    subtype: device_offline
+  condition: []
+  action:
   - device_id: 261400ab5e1c4135b55792f8d7f5ba5d
     domain: mobile_app
     type: notify
     title: ''
-    message: The Freezer is Off
+    message: Water Detected
+  - device_id: a9f77d00cf55420aa7adc6088cc06fdc
+    domain: mobile_app
+    type: notify
+    title: ''
+    message: Water detected
+  - service: notify.telegram_zaven
+    data:
+      message: Water Detected
   mode: single

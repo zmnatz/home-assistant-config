@@ -1,5 +1,0 @@
-friendly_name: Sleep
-device_class: occupancy
-icon_template: mdi:sleep
-value_template: >-
-  {{ is_state('input_select.comfort_setting', 'Sleep')}}

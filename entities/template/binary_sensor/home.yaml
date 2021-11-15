@@ -1,4 +1,0 @@
-device_class: occupancy
-friendly_name: 'Home'
-value_template: >-
-  {{ is_state('input_select.comfort_setting', 'Home')}}

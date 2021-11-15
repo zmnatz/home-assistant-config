@@ -1,0 +1,11 @@
+friendly_name: White Noise
+icon_template: mdi:sleep
+turn_on:
+  - service: media_player.play_media
+    entity_id: media_player.nursery_speaker
+    data:
+      media_content_id: http://www.gstatic.com/voice_delight/sounds/long/ocean.mp3
+      media_content_type: url
+turn_off:
+  - service: media_player.media_stop
+    entity_id: media_player.nursery_speaker

@@ -12,7 +12,9 @@ config:
 http:
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
-
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 192.168.2.10
 # Text to speech
 tts:
   - platform: google_translate

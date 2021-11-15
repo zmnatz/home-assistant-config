@@ -35,10 +35,6 @@ automation.ecobee_sleep_mode:
   icon: mdi:sleep
 automation.ecobee_away_mode:
   icon: mdi:home-export-outline
-binary_sensor.home:
-  icon: mdi:home
-binary_sensor.sleep:
-  icon: mdi:sleep
 light.dining_room_lights:
   friendly_name: Dining Room
   icon: mdi:silverware
@@ -105,6 +101,6 @@ automation.wake_up_casey:
 automation.wake_up_zaven:
   icon: mdi:face
 light.bedroom_fan:
-  icon: mdi:fan
+  icon: mdi:dome-light
 switch.basement_nintendo_switch:
   icon: mdi:nintendo-switch

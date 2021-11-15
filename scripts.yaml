@@ -1,53 +1,25 @@
 home_mode:
   alias: Home Mode
   sequence:
-  - data:
-      option: Home
-    entity_id: input_select.comfort_setting
-    service: input_select.select_option
-  - device_id: 8938d322fd3b11eab38eafa121ce86b4
-    domain: climate
-    entity_id: climate.ecobee
-    type: set_preset_mode
-    preset_mode: Home
-  - type: turn_on
-    device_id: 0233adeeed4c4df38fc3757290491589
-    entity_id: switch.christmas_tree
-    domain: switch
+  - service: ecobee.resume_program
+    data:
+      entity_id: climate.ecobee
+      resume_all: true
   mode: single
   icon: mdi:home
 leaving_home:
   alias: Leaving Home
   sequence:
-  - data:
-      option: Away
-    entity_id: input_select.comfort_setting
-    service: input_select.select_option
-  - data:
-      entity_id: group.indoor_lights
-    service: homeassistant.turn_off
-  - device_id: 8938d322fd3b11eab38eafa121ce86b4
+  - device_id: 23c51aef4f600bf8b5c2be5d65ccd258
     domain: climate
     entity_id: climate.ecobee
     type: set_preset_mode
     preset_mode: Away
-  - data:
-      hvac_mode: 'off'
-    entity_id: climate.bedroom
-    service: climate.set_hvac_mode
-  - device_id: 5cb0bbaab2a94d110940d1795257f2c1
-    domain: lock
-    entity_id: lock.front_door
-    type: lock
   mode: single
   icon: mdi:car
 sleep_mode:
   alias: Sleep Mode
   sequence:
-  - data:
-      option: Sleep
-    entity_id: input_select.comfort_setting
-    service: input_select.select_option
   - entity_id: lock.front_door
     service: lock.lock
   - service: switch.turn_on
@@ -56,14 +28,6 @@ sleep_mode:
       entity_id:
       - switch.fountain
       - switch.air_purifier
-  - device_id: 8938d322fd3b11eab38eafa121ce86b4
-    domain: climate
-    entity_id: climate.ecobee
-    type: set_preset_mode
-    preset_mode: Sleep
-  - condition: state
-    entity_id: input_select.comfort_setting
-    state: Sleep
   mode: single
   icon: mdi:sleep
 unlock_house:
@@ -112,38 +76,19 @@ wake_up:
     data:
       brightness: 1
     entity_id:
-    - light.bedroom_lamp_1
-    - light.bedroom_lamp_2
-    - light.bedroom_lamp_3
+    - light.bedroom_1
+    - light.bedroom_2
   - service: light.turn_on
     data:
       brightness: 255
       transition: 600
     entity_id:
-    - light.bedroom_lamp_1
-    - light.bedroom_lamp_2
-    - light.bedroom_lamp_3
+    - light.bedroom_1
+    - light.bedroom_2
   - service: script.home_mode
     data: {}
   mode: single
   icon: mdi:alarm
-turn_off_bedroom:
-  alias: Turn Off Bedroom
-  sequence:
-  - type: turn_off
-    device_id: 73752783246048bb9867a8e5dcb6f819
-    entity_id: switch.fountain
-    domain: switch
-  - type: turn_off
-    device_id: 73752783246048bb9867a8e5dcb6f819
-    entity_id: switch.air_purifier
-    domain: switch
-  - service: climate.set_hvac_mode
-    data:
-      hvac_mode: 'off'
-    entity_id: climate.bedroom
-  mode: single
-  icon: mdi:weather-sunset-up
 turn_on_apple_tv:
   sequence:
   - service: remote.send_command
