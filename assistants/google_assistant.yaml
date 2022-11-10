@@ -84,3 +84,8 @@ entity_config:
     - Laundry Lights
     - Laundry Room
     expose: true
+  media_player.denon_avr_x2000:
+    room: Basement
+    name: Basement Stereo
+    expose: true
+

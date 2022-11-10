@@ -1,0 +1,4 @@
+friendly_name: Kitchen Presence
+state: >-
+    {{is_state('binary_sensor.kitchen_motion', 'off')}}
+device_class: Presence

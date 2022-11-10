@@ -1,0 +1,113 @@
+blueprint:
+  name: Zooz Scene Controller
+  description: Create automations for the Zooz Scene Controller using the Z-Wave JS integration.
+  domain: automation
+  input:
+    scene_controller:
+      name: Switch Device
+      description: List of available Zooz ZEN32
+      selector:
+        device:
+          integration: zwave_js
+          manufacturer: Zooz
+          model: ZEN32
+    tap_1x_0:
+      name: Tap 1x Big Button
+      description: Action to run when big button is pressed 1 time.
+      default: []
+      selector:
+        action:
+    tap_2x_0:
+      name: Tap 2x Big Button
+      description: Action to run when big button is pressed 2 times.
+      default: []
+      selector:
+        action:
+    tap_1x_1:
+      name: Tap 1x Top Left
+      description: Action to run when top left button is pressed 1 time.
+      default: []
+      selector:
+        action:
+    tap_2x_1:
+      name: Tap 2x Top Left
+      description: Action to run when top left button is pressed 2 times.
+      default: []
+      selector:
+        action:
+    tap_1x_2:
+      name: Tap 1x Top Right
+      description: Action to run when top right button is pressed 1 time.
+      default: []
+      selector:
+        action:
+    tap_2x_2:
+      name: Tap 2x Top Right
+      description: Action to run when top right button is pressed 2 times.
+      default: []
+      selector:
+        action:
+    tap_1x_3:
+      name: Tap 1x Bottom Left
+      description: Action to run when bottom left button is pressed 1 time.
+      default: []
+      selector:
+        action:
+    tap_2x_3:
+      name: Tap 2x Bottom Left
+      description: Action to run when bottom left button is pressed 2 times.
+      default: []
+      selector:
+        action:
+    tap_1x_4:
+      name: Tap 1x Bottom Right
+      description: Action to run when bottom right button is pressed 1 time.
+      default: []
+      selector:
+        action:
+    tap_2x_4:
+      name: Tap 2x Bottom Right
+      description: Action to run when bottom right button is pressed 2 times.
+      default: []
+      selector:
+        action:
+#  source_url: https://gist.github.com/shannonfritz/b5151cd53285a1694bf68f56053114b7
+mode: single
+max_exceeded: silent
+variables:
+  device_id: !input 'scene_controller'
+trigger:
+- platform: event
+  event_type: zwave_js_value_notification
+condition: '{{ trigger.event.data.device_id == device_id }}'
+action:
+- variables:
+    property_key_name: '{{ trigger.event.data.property_key_name }}'
+    label: '{{ trigger.event.data.label }}'
+    command_class_name: '{{ trigger.event.data.command_class_name }}'
+    value: '{{ trigger.event.data.value }}'
+- service: logbook.log
+  data:
+    name: 'Z-Wave JS'
+    message: 'received event: {{ command_class_name }} - {{ value }} - {{ label }}'
+- choose:
+  - conditions: '{{ property_key_name == ''005'' and value == ''KeyPressed'' }}'
+    sequence: !input 'tap_1x_0'
+  - conditions: '{{ property_key_name == ''005'' and value == ''KeyPressed2x'' }}'
+    sequence: !input 'tap_2x_0'
+  - conditions: '{{ property_key_name == ''001'' and value == ''KeyPressed'' }}'
+    sequence: !input 'tap_1x_1'
+  - conditions: '{{ property_key_name == ''001'' and value == ''KeyPressed2x'' }}'
+    sequence: !input 'tap_2x_1'
+  - conditions: '{{ property_key_name == ''002'' and value == ''KeyPressed'' }}'
+    sequence: !input 'tap_1x_2'
+  - conditions: '{{ property_key_name == ''002'' and value == ''KeyPressed2x'' }}'
+    sequence: !input 'tap_2x_2'
+  - conditions: '{{ property_key_name == ''003'' and value == ''KeyPressed2x'' }}'
+    sequence: !input 'tap_2x_3'
+  - conditions: '{{ property_key_name == ''003'' and value == ''KeyPressed'' }}'
+    sequence: !input 'tap_1x_3'
+  - conditions: '{{ property_key_name == ''004'' and value == ''KeyPressed'' }}'
+    sequence: !input 'tap_1x_4'
+  - conditions: '{{ property_key_name == ''004'' and value == ''KeyPressed2x'' }}'
+    sequence: !input 'tap_2x_4'

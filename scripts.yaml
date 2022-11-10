@@ -1,113 +1,80 @@
 home_mode:
   alias: Home Mode
   sequence:
-  - service: ecobee.resume_program
-    data:
-      entity_id: climate.ecobee
-      resume_all: true
+  - parallel:
+    - device_id: e2e5fb32908b6c6918648474f0a06c6b
+      domain: button
+      entity_id: button.ecobee_clear_hold
+      type: press
+    - if:
+      - condition: device
+        device_id: 9f93b82e938d4689ed1c02313c629633
+        domain: lock
+        entity_id: lock.front_door_lock
+        type: is_locked
+      then:
+      - device_id: 9f93b82e938d4689ed1c02313c629633
+        domain: lock
+        entity_id: lock.front_door_lock
+        type: unlock
+    - if:
+      - type: is_not_open
+        condition: device
+        device_id: 149e4a35accf911d93b16247940d8fb2
+        entity_id: binary_sensor.garage_door_sensor
+        domain: binary_sensor
+      then:
+      - type: turn_on
+        device_id: e5bf1899fb0cd1a4c89a67fc8e9e42c2
+        entity_id: switch.garage_opener_button
+        domain: switch
   mode: single
   icon: mdi:home
 leaving_home:
   alias: Leaving Home
   sequence:
-  - device_id: 23c51aef4f600bf8b5c2be5d65ccd258
-    domain: climate
-    entity_id: climate.ecobee
-    type: set_preset_mode
-    preset_mode: Away
+  - parallel:
+    - device_id: e2e5fb32908b6c6918648474f0a06c6b
+      domain: select
+      entity_id: select.ecobee_current_mode
+      type: select_option
+      option: away
+    - if:
+      - type: is_open
+        condition: device
+        device_id: 149e4a35accf911d93b16247940d8fb2
+        entity_id: binary_sensor.garage_door_sensor
+        domain: binary_sensor
+      then:
+      - type: turn_on
+        device_id: e5bf1899fb0cd1a4c89a67fc8e9e42c2
+        entity_id: switch.garage_opener_button
+        domain: switch
+    - if:
+      - condition: device
+        device_id: 9f93b82e938d4689ed1c02313c629633
+        domain: lock
+        entity_id: lock.front_door_lock
+        type: is_unlocked
+      then:
+      - device_id: 9f93b82e938d4689ed1c02313c629633
+        domain: lock
+        entity_id: lock.front_door_lock
+        type: lock
   mode: single
   icon: mdi:car
-sleep_mode:
-  alias: Sleep Mode
+go_to_trash_can:
+  alias: Go to Trash Can
   sequence:
-  - entity_id: lock.front_door
-    service: lock.lock
-  - service: switch.turn_on
+  - service: xiaomi_miio.vacuum_goto
+    data:
+      x_coord: '23900'
+      y_coord: '15500'
+    target:
+      device_id: 993acbd32f40399e3ddc79cb1b168bca
+  - service: counter.reset
     data: {}
     target:
-      entity_id:
-      - switch.fountain
-      - switch.air_purifier
+      entity_id: counter.cleanings
   mode: single
-  icon: mdi:sleep
-unlock_house:
-  alias: Unlock House
-  icon: mdi:lock-open
-  mode: single
-  sequence:
-  - device_id: 5cb0bbaab2a94d110940d1795257f2c1
-    domain: lock
-    entity_id: lock.front_door
-    type: unlock
-  - choose:
-    - conditions:
-      - condition: sun
-        before: sunset
-        after: sunrise
-      sequence:
-      - brightness_pct: 100
-        device_id: f27e62be9d8d4f97b8cda056b0be5211
-        domain: light
-        entity_id: light.streetlight
-        type: turn_on
-      - timeout: 00:10:00
-        wait_template: '{{ is_state("binary_sensor.front_door_contact", "on")}}'
-      - before: sunset
-        condition: sun
-      - device_id: f27e62be9d8d4f97b8cda056b0be5211
-        domain: light
-        entity_id: light.streetlight
-        type: turn_off
-    - conditions:
-      - condition: sun
-        after: sunset
-        before: sunrise
-      sequence:
-      - type: turn_on
-        device_id: 785b4e6d7e274837903def7378d1aacd
-        entity_id: light.entrance_lights
-        domain: light
-        brightness_pct: 100
-    default: []
-wake_up:
-  alias: Wake Up
-  sequence:
-  - service: light.turn_on
-    data:
-      brightness: 1
-    entity_id:
-    - light.bedroom_1
-    - light.bedroom_2
-  - service: light.turn_on
-    data:
-      brightness: 255
-      transition: 600
-    entity_id:
-    - light.bedroom_1
-    - light.bedroom_2
-  - service: script.home_mode
-    data: {}
-  mode: single
-  icon: mdi:alarm
-turn_on_apple_tv:
-  sequence:
-  - service: remote.send_command
-    target:
-      device_id: f101f71aa591824df3115185b3c7392f
-    data:
-      command: wakeup
-  mode: single
-  alias: Turn On Apple TV
-  icon: mdi:apple
-turn_off_apple_tv:
-  alias: Turn Off Apple TV
-  sequence:
-  - service: remote.send_command
-    target:
-      device_id: f101f71aa591824df3115185b3c7392f
-    data:
-      command:
-      - home_hold
-      - select
-  mode: single
-  icon: mdi:apple
+  icon: mdi:trash-can-outline

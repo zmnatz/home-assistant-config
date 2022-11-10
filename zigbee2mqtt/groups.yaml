@@ -1,0 +1,22 @@
+'1':
+  friendly_name: Utility Lights
+  devices:
+    - 0x00178801032782fb/11
+    - 0x00178801033a24d4/11
+'2':
+  friendly_name: Theater Lights
+  devices:
+    - 0x0017880102e503b7/11
+    - 0x001788010273fa2f/11
+'3':
+  friendly_name: Gym Lights
+  devices:
+    - 0x0017880102e4fde1/11
+    - 0x001788010273fbb3/11
+    - 0x00178801027671c9/11
+    - 0x0017880102764154/11
+'5':
+  friendly_name: Streetlights
+  devices:
+    - 0x00178801065e2378/11
+    - 0x0017880106c5f983/11

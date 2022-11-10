@@ -1,0 +1,108 @@
+blueprint:
+  name: Area Lighting
+  domain: automation
+  input:
+    room:
+      selector:
+        area:
+    motion_trigger:
+      name: Motion Sensor
+      description: The Motion Sensor that turns the lights ON and OFF.
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: occupancy
+          multiple: false
+    time_delay:
+      name: Time Delay
+      description: The delay time to leave the lights on after the last motion is
+        detected.
+      default: 5
+      selector:
+        number:
+          min: 0.0
+          max: 30.0
+          step: 0.5
+          unit_of_measurement: minutes
+          mode: slider
+    sun_elevation:
+      name: Sun Elevation (Optional)
+      description: This is the angle between the sun and the horizon. Negative values
+        mean the sun is BELOW the horizon. If you don't see a number value next to
+        "degrees" then this function is disabled. See the above on how to disable
+        this function. Guide is -1.5 (dusk) and at -4.0 (dawn).
+      default: none
+      selector:
+        number:
+          min: -10.0
+          max: 5.0
+          step: 0.5
+          unit_of_measurement: degrees
+          mode: slider
+    ambient_light_sensor:
+      name: Ambient Light Sensor (Optional)
+      description: This is used for adding a condition to only work when it is dark
+        or below the Ambient Light LUX Value. To disable this function type the word
+        "none" in the field, click off it and a save option pops up, then click save.
+      default: none
+      selector:
+        entity:
+          domain: sensor
+          device_class: illuminance
+          multiple: false
+    ambient_light_value:
+      name: Ambient Light LUX Value (Optional)
+      description: Set the Ambient Light Value if you have selected Ambient Light
+        Sensor. See the above on how to disable this function. Guide is 20 lux (dusk)
+        and at 80 lux (dawn).
+      default: none
+      selector:
+        number:
+          min: 0.0
+          max: 500.0
+          step: 10.0
+          unit_of_measurement: LUX
+          mode: slider
+mode: restart
+max_exceeded: silent
+variables:
+  motion_trigger: !input motion_trigger
+  room: !input room
+  time_delay: !input time_delay
+  sun_elevation: !input sun_elevation
+  ambient_light_sensor: !input ambient_light_sensor
+  ambient_light_value: !input ambient_light_value
+trigger:
+  platform: state
+  entity_id: !input motion_trigger
+  from: 'off'
+  to: 'on'
+condition:
+- condition: or
+  conditions:
+  - '{{ motion_bypass == ''none'' }}'
+  - '{{ states[motion_bypass].state == ''off'' }}'
+- condition: template
+  value_template: '{{ (sun_elevation == none) or (state_attr(''sun.sun'',''elevation'')
+    <= sun_elevation | float(90)) }}'
+- condition: or
+  conditions:
+  - '{{ ambient_light_sensor == ''none'' }}'
+  - '{{ ambient_light_value == ''none'' }}'
+  - '{{ states[ambient_light_sensor].state | int < ambient_light_value | int }}'
+action:
+- alias: Turn on the light
+  service: light.turn_on
+  target: !input room
+- alias: Wait until motion sensor is off
+  wait_for_trigger:
+    platform: state
+    entity_id: !input motion_trigger
+    from: 'on'
+    to: 'off'
+- alias: Wait the number of minutes that has been set
+  delay:
+    minutes: !input time_delay
+- alias: Turn off the lights
+  service: light.turn_off
+  target: !input room

@@ -1,17 +1,2 @@
-- platform: waze_travel_time
-  name: Work
-  origin: device_tracker.zaven_iphone
-  destination: !secret work_addr
-  region: 'US'
-- platform: waze_travel_time
-  name: Casey ETA
-  origin: device_tracker.caseys_iphone
-  destination: !secret home_addr
-  region: 'US'
-- platform: waze_travel_time
-  name: Zaven ETA
-  origin: device_tracker.zaven_iphone
-  destination: !secret home_addr
-  region: 'US'
 - platform: template
   sensors: !include_dir_named template/sensors/  

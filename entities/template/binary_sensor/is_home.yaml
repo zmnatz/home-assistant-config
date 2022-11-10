@@ -1,6 +1,6 @@
-friendly_name: 'Home'
+name: 'Home'
 device_class: occupancy
-value_template: >-
+state: >-
     {{ is_state('person.zaven', 'home')
       or is_state('person.casey', 'home')
       or is_state('input_boolean.guest_mode', 'on')

@@ -1,0 +1,157 @@
+blueprint:
+  name: Set Indicator Light on Scene Controller
+  description: For Zooz ZEN32. Sets the indicator color when light is off or dimmed.
+  domain: automation
+  input:
+    zooz_switch:
+      name: Zooz Switch
+      description: List of available Zooz ZEN32 switches.
+      selector:
+        device:
+          integration: zwave_js
+          manufacturer: Zooz
+          model: ZEN32
+          multiple: false
+    target_light:
+      name: Light
+      description: The light to link to button
+      selector:
+        entity:
+          domain:
+          - light
+          - lock
+          - switch
+          multiple: false
+    scene_button:
+      name: Scene Button
+      description: The button to link to light
+      selector:
+        select:
+          mode: dropdown
+          options:
+          - label: Scene 5 (Big Button)
+            value: '0'
+          - label: Scene 1 (Top Left)
+            value: '1'
+          - label: Scene 2 (Top Right)
+            value: '2'
+          - label: Scene 3 (Bottom Left)
+            value: '3'
+          - label: Scene 4 (Bottom Right)
+            value: '4'
+          multiple: false
+          custom_value: false
+    on_color:
+      name: On Color
+      description: Color to make indicator when light is on (default white)
+      default: White
+      selector:
+        select:
+          mode: dropdown
+          options:
+          - label: White
+            value: '0'
+          - label: Blue
+            value: '1'
+          - label: Green
+            value: '2'
+          - label: Red
+            value: '3'
+          multiple: false
+          custom_value: false
+    dimmed_color:
+      name: Dimmed Color
+      description: Color to make indicator when light is dimmed (default blue)
+      default: Blue
+      selector:
+        select:
+          mode: dropdown
+          options:
+          - label: White
+            value: '0'
+          - label: Blue
+            value: '1'
+          - label: Green
+            value: '2'
+          - label: Red
+            value: '3'
+          multiple: false
+          custom_value: false
+  source_url: https://community.home-assistant.io/t/set-the-indicator-light-on-a-zooz-zen32-scene-controller-button-to-match-the-state-of-a-light/427707
+mode: single
+max_exceeded: silent
+variables:
+  controller_id: !input 'zooz_switch'
+  light_id: !input 'target_light'
+  button_id: !input 'scene_button'
+  toggle_offset: 1
+  color_offset: 6
+  on_value: 3
+  off_value: 2
+  on_color: !input 'on_color'
+  dimmed_color: !input 'dimmed_color'
+  full_brightness: 255
+trigger:
+- platform: state
+  entity_id: !input 'target_light'
+  attribute: brightness
+  for:
+    hours: 0
+    minutes: 0
+    seconds: 5
+- platform: state
+  entity_id: !input 'target_light'
+action:
+- choose:
+  - conditions: '{{(
+        is_state_attr(light_id, ''domain'', ''light'') and 
+        is_state(light_id, ''on'') and 
+        not is_state_attr(light_id, ''brightness'', full_brightness)
+      ) or (
+        is_state_attr(light_id, ''domain'', ''lock'') and 
+        not is_state(light_id, ''unlocked'') and 
+        not is_state(light_id, ''locked'')
+      )}}'
+    sequence:
+    - parallel:
+      - service: zwave_js.set_config_parameter
+        data:
+          parameter: '{{ (button_id | int) + (color_offset | int) }}'
+          value: '{{ dimmed_color }}'
+        target:
+          device_id: '{{ controller_id }}'
+      - service: zwave_js.set_config_parameter
+        data:
+          parameter: '{{ (button_id | int) + (toggle_offset | int) }}'
+          value: '{{ on_value }}'
+        target:
+          device_id: '{{ controller_id }}'
+  - conditions: '{{
+      is_state(light_id, ''on'') or 
+      is_state(light_id, ''unlocked'') 
+    }}'
+    sequence:
+    - parallel:
+      - service: zwave_js.set_config_parameter
+        data:
+          parameter: '{{ (button_id | int) + (color_offset | int) }}'
+          value: '{{ on_color }}'
+        target:
+          device_id: '{{ controller_id }}'
+      - service: zwave_js.set_config_parameter
+        data:
+          parameter: '{{ (button_id | int) + (toggle_offset | int) }}'
+          value: '{{ on_value }}'
+        target:
+          device_id: '{{ controller_id }}'
+  - conditions: '{{ 
+      is_state(light_id, ''off'') or 
+      is_state(light_id, ''locked'')
+    }}'
+    sequence:
+    - service: zwave_js.set_config_parameter
+      data:
+        parameter: '{{ (button_id | int) + (toggle_offset | int) }}'
+        value: '{{ off_value }}'
+      target:
+        device_id: '{{ controller_id }}'

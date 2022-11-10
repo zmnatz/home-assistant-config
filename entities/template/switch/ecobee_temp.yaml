@@ -1,0 +1,11 @@
+friendly_name: Resume Schedule
+icon_template: mdi:clock
+value_template: "{{is_state_attr('climate.ecobee', 'preset_mode', 'temp')|bool}}" 
+turn_on:
+  service: ecobee.resume_program
+  target: 
+    entity_id: climate.ecobee
+turn_off:
+  service: ecobee.resume_program
+  target: 
+    entity_id: climate.ecobee

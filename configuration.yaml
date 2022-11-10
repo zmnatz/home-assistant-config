@@ -20,27 +20,38 @@ tts:
   - platform: google_translate
 
 # Homeassistant Configs
-group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 zone: !include zone.yaml
 
 # Entities
-sensor: !include entities/sensors.yaml
 binary_sensor: !include entities/binary_sensors.yaml
+sensor: !include entities/sensors.yaml
 switch: !include entities/switches.yaml
-light: !include entities/light.yaml
 remote: !include entities/remote.yaml
+lock: !include_dir_list entities/template/lock
+
+template:
+- binary_sensor:
+  - name: "Is Home"
+    state: >
+      {{ is_state('person.zaven', 'home')
+        or is_state('person.casey', 'home')
+        or is_state('input_boolean.guest_mode', 'on')
+      }}
+    device_class: presence
+  - name: "Kitchen Occupied"
+    state: >-
+      {{is_state('binary_sensor.kitchen_motion', 'on')}}
+    device_class: occupancy
+    delay_off: 
+      minutes: 20
+    
+
   
 # Integrations
-camera: !include integrations/camera.yaml
-climate: !include_dir_list integrations/climate
-hue: !include integrations/hue.yaml
-lutron_caseta: !include integrations/lutron.yaml
-tplink: !include integrations/tplink.yaml
-ifttt: !include integrations/ifttt.yaml
-spotify: !include integrations/spotify.yaml
+# hue: !include integrations/hue.yaml
 
 # Assistants
 # homekit: !include assistants/homekit.yaml

@@ -1,95 +1,65 @@
-- id: '1563026077178'
-  alias: Start Homekit
-  trigger:
-  - event: start
-    platform: homeassistant
-  condition: []
-  action:
-  - delay: 0:01
-  - service: homekit.start
-- id: '1593732685749'
-  alias: Adguard Sync
-  description: ''
-  trigger:
-  - entity_id: switch.adguard_protection
-    platform: state
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: switch.adguard_protection
-        state: 'off'
-      sequence:
-      - service: pi_hole.disable
-        data:
-          duration: 00:00:00
-    - conditions:
-      - condition: state
-        entity_id: switch.adguard_protection
-        state: 'on'
-      sequence:
-      - service: pi_hole.enable
-        data: {}
 - id: '1596632295758'
-  alias: Arrive Home
+  alias: 'Geo: Arrive Home'
   description: ''
   trigger:
-  - entity_id: person.casey
-    platform: state
-    to: home
-    id: casey_home
+  - platform: device
+    device_id: a9f77d00cf55420aa7adc6088cc06fdc
+    domain: device_tracker
+    entity_id: device_tracker.caseys_iphone
+    type: enters
+    zone: zone.home
   - platform: device
     device_id: 261400ab5e1c4135b55792f8d7f5ba5d
     domain: device_tracker
     entity_id: device_tracker.zaven_iphone
     type: enters
-    id: zaven_home
     zone: zone.home
   condition: []
   action:
-  - service: script.unlock_house
+  - service: script.home_mode
     data: {}
-  - condition: trigger
-    id: casey_home
-  - delay: 00:05
-  - device_id: a9f77d00cf55420aa7adc6088cc06fdc
-    domain: mobile_app
-    type: notify
-    title: ''
-    message: Did we lock the car?
   mode: single
 - id: '1600221028451'
-  alias: Sun Changes
+  alias: 'Lighting: Sun Changes'
   description: ''
   trigger:
   - event: sunrise
     platform: sun
-    id: sunrise
+  - platform: time
+    at: '23:00:00'
+    id: 'Latenight '
   - platform: sun
     event: sunset
     id: sunset
+  - platform: time
+    at: 04:00:00
+    id: sunset
   condition: []
   action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: sunrise
-      sequence:
-      - service: light.turn_off
-        target:
-          entity_id: light.streetlights
-    - conditions:
-      - condition: trigger
-        id: sunset
-      sequence:
-      - service: light.turn_on
-        target:
-          entity_id: light.streetlights
-    default: []
+  - if:
+    - condition: trigger
+      id: sunset
+    then:
+    - service: light.turn_on
+      data: {}
+      target:
+        area_id: outside
+    else:
+    - service: light.turn_off
+      data: {}
+      target:
+        area_id: outside
+  - if:
+    - condition: trigger
+      id: 'Latenight '
+    then:
+    - service: light.turn_off
+      data: {}
+      target:
+        entity_id: light.downstairs
   mode: single
 - id: '1610999476218'
-  alias: Leaving Work
+  alias: 'Notification: Leaving Work'
   description: ''
   use_blueprint:
     path: homeassistant/notify_leaving_zone.yaml
@@ -97,173 +67,21 @@
       zone_entity: zone.work
       notify_device: a9f77d00cf55420aa7adc6088cc06fdc
       person_entity: person.zaven
-- id: '1611233481278'
-  alias: Wake Up Zaven
-  description: ''
-  use_blueprint:
-    path: wake_up.yaml
-    input:
-      wake_up_time: input_datetime.wake_up_zaven
-- id: '1611233498710'
-  alias: Wake Up Casey
-  description: ''
-  use_blueprint:
-    path: wake_up.yaml
-    input:
-      wake_up_time: input_datetime.wake_up_casey
-- alias: Update USPS Mail Camera Path on Hass Restart
-  trigger:
-  - platform: state
-    entity_id: sensor.mail_updated
-  - platform: homeassistant
-    event: start
-  action:
-  - service: local_file.update_file_path
-    data_template:
-      entity_id: camera.mail_usps
-      file_path: '{{ states(''sensor.mail_image_system_path'') }}'
-  id: 16dd6f238bda4879a7453de7fa8fcdb3
-- id: '1624832277642'
-  alias: Nursery Music Loop
-  description: ''
-  trigger:
-  - platform: device
-    device_id: ce8fe1ee4b9f4c2a84629930787765f3
-    domain: media_player
-    entity_id: media_player.nursery_speaker
-    type: idle
-  - platform: device
-    device_id: ce8fe1ee4b9f4c2a84629930787765f3
-    domain: media_player
-    entity_id: media_player.nursery_speaker
-    type: paused
-  - platform: device
-    device_id: ce8fe1ee4b9f4c2a84629930787765f3
-    domain: media_player
-    entity_id: media_player.nursery_speaker
-    type: turned_off
-  condition:
-  - condition: state
-    entity_id: switch.white_noise
-    state: 'on'
-  action:
-  - service: media_player.play_media
-    entity_id: media_player.nursery_speaker
-    data:
-      media_content_id: http://www.gstatic.com/voice_delight/sounds/long/ocean.mp3
-      media_content_type: url
-  mode: single
-- id: '1624832716801'
-  alias: Nursery Music Toggle
-  description: ''
-  trigger:
-  - device_id: 77978197a7c443bdbae39c657f196340
-    domain: hue
-    platform: device
-    type: remote_button_long_release
-    subtype: dim_down
-  condition: []
-  action:
-  - service: switch.toggle
-    target:
-      entity_id: switch.white_noise
-  mode: single
-- id: '1625754961035'
-  alias: Nursery Sleeping
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: switch.white_noise
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: switch.white_noise
-        state: 'on'
-      sequence:
-      - device_id: 8938d322fd3b11eab38eafa121ce86b4
-        domain: climate
-        entity_id: climate.ecobee
-        type: set_preset_mode
-        preset_mode: Sleep
-      - type: turn_on
-        device_id: dbc45aa30675419796d297f37482837f
-        entity_id: switch.nursery_room_fan
-        domain: switch
-    - conditions:
-      - condition: state
-        entity_id: switch.white_noise
-        state: 'off'
-      sequence:
-      - service: ecobee.resume_program
-        data:
-          resume_all: true
-      - condition: state
-        entity_id: binary_sensor.nursery_occupancy
-        state: 'off'
-      - type: turn_off
-        device_id: dbc45aa30675419796d297f37482837f
-        entity_id: switch.nursery_room_fan
-        domain: switch
-    default: []
-  mode: single
 - id: '1626091307899'
-  alias: Comfort Settings
+  alias: 'Geo: Leaving Home'
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.is_home
-    id: home
-    to: 'on'
-  - platform: time
-    at: input_datetime.sleep
-    id: sleep
-  - platform: state
-    entity_id: binary_sensor.is_home
-    id: away
+    entity_id:
+    - binary_sensor.is_home
     to: 'off'
   condition: []
   action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: home
-      sequence:
-      - service: script.home_mode
-    - conditions:
-      - condition: trigger
-        id: away
-      sequence:
-      - service: script.leaving_home
-    - conditions:
-      - condition: trigger
-        id: sleep
-      - condition: state
-        entity_id: binary_sensor.is_home
-        state: 'on'
-      sequence:
-      - service: script.sleep_mode
-    default: []
-  mode: single
-- id: '1629989041599'
-  alias: Vacuum House
-  description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.vacuum
-  condition:
-  - condition: state
-    entity_id: binary_sensor.is_home
-    state: 'on'
-  action:
-  - device_id: 993acbd32f40399e3ddc79cb1b168bca
-    domain: vacuum
-    entity_id: vacuum.roborock_s4
-    type: clean
+  - service: script.leaving_home
+    data: {}
   mode: single
 - id: '1635208283021'
-  alias: Water Detected
+  alias: 'Notification: Water Detected'
   description: ''
   trigger:
   - type: moist
@@ -276,11 +94,11 @@
     device_id: ae7403119e0b26dbc8d89c880db18f5c
     entity_id: binary_sensor.sump_pit_water
     domain: binary_sensor
-  - device_id: 6a38d6efa5ccd0b9f976bd91d1ca188c
-    domain: zha
+  - type: moist
     platform: device
-    type: device_offline
-    subtype: device_offline
+    device_id: 6a38d6efa5ccd0b9f976bd91d1ca188c
+    entity_id: binary_sensor.kitchen_sink_water
+    domain: binary_sensor
   condition: []
   action:
   - device_id: 261400ab5e1c4135b55792f8d7f5ba5d
@@ -293,7 +111,629 @@
     type: notify
     title: ''
     message: Water detected
-  - service: notify.telegram_zaven
-    data:
-      message: Water Detected
+  - choose:
+    - conditions:
+      - condition: zone
+        entity_id: person.zaven
+        zone: zone.work
+      sequence:
+      - service: notify.telegram_zaven
+        data:
+          message: Water Detected
+    default: []
+  mode: single
+- id: '1637871143444'
+  alias: 'Lighting: Motion Utility'
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light.yaml
+    input:
+      motion_entity: binary_sensor.hue_sensor_occupancy
+      no_motion_wait: 320
+      light_target:
+        area_id: utility_room
+- id: '1641729276178'
+  alias: 'Lighting: Contact Laundry'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.laundry_door_contact
+  condition: []
+  action:
+  - if:
+    - type: is_open
+      condition: device
+      device_id: f631503767ac07281b3c329e8761965f
+      entity_id: binary_sensor.laundry_door_contact
+      domain: binary_sensor
+    then:
+    - type: turn_on
+      device_id: f62aeedae803bffa2ca7163c8982c908
+      entity_id: switch.laundry_room_lights
+      domain: switch
+    else:
+    - type: turn_off
+      device_id: f62aeedae803bffa2ca7163c8982c908
+      entity_id: switch.laundry_room_lights
+      domain: switch
+  mode: single
+- id: '1641947963034'
+  alias: 'Scene: Master Bedroom'
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 17cd91f8dd718c59188dde35ab2501d3
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '001'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 001
+    id: 'on'
+  - platform: device
+    device_id: 17cd91f8dd718c59188dde35ab2501d3
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '001'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 001
+    value: 3
+    id: On2
+  - platform: device
+    device_id: 17cd91f8dd718c59188dde35ab2501d3
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '002'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 002
+    id: 'Off'
+  - platform: device
+    device_id: 17cd91f8dd718c59188dde35ab2501d3
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '002'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 002
+    value: 3
+    id: Off2
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'Off'
+      sequence:
+      - type: turn_off
+        device_id: 48b96dda52b894333eaf2dccb92f4d94
+        entity_id: light.nursing_lamp
+        domain: light
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - type: turn_on
+        device_id: 48b96dda52b894333eaf2dccb92f4d94
+        entity_id: light.nursing_lamp
+        domain: light
+    - conditions:
+      - condition: trigger
+        id: off-2
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          area_id: b02be3c7fe7a11eaba1115af9c814499
+    - conditions:
+      - condition: trigger
+        id: on-2
+      sequence:
+      - type: turn_on
+        device_id: 4afbd91eaa453440330ee57762174b00
+        entity_id: light.master_bedroom_lights
+        domain: light
+    default: []
+  mode: single
+- id: '1644410881111'
+  alias: 'Notification: Refrigerator Open'
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 4b1232897be1d7d70fa9b4444d0b528d
+    entity_id: binary_sensor.refrigerator_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition: []
+  action:
+  - device_id: 261400ab5e1c4135b55792f8d7f5ba5d
+    domain: mobile_app
+    type: notify
+    message: Fridge is open
+    title: Home Alert
+  - device_id: a9f77d00cf55420aa7adc6088cc06fdc
+    domain: mobile_app
+    type: notify
+    message: Fridge is open
+    title: Home Alert
+  mode: single
+- id: '1647563069003'
+  alias: 'Scenes: Bathroom'
+  description: ''
+  use_blueprint:
+    path: zooz_scene_controller.yaml
+    input:
+      tap_1x_2: []
+      tap_2x_2:
+      - service: media_player.select_source
+        data:
+          source: Bedroom
+        target:
+          device_id: 82edc02e27747d0b049b3ccc4a4192ff
+      - service: media_player.play_media
+        data:
+          media_content_type: playlist
+          media_content_id: https://open.spotify.com/playlist/0hKbttoix2OWV1r7gTJn2v?si=Wn_DkKPqSoOb08WBmEf5qA
+        target:
+          device_id: 82edc02e27747d0b049b3ccc4a4192ff
+      scene_controller: 734be3d003ea8c89d4fcd63fc3021e79
+      tap_1x_:
+      - service: media_player.select_source
+        data:
+          source: Bathroom
+        target:
+          device_id: 82edc02e27747d0b049b3ccc4a4192ff
+      - service: media_player.play_media
+        data:
+          media_content_type: playlist
+          media_content_id: https://open.spotify.com/playlist/37i9dQZF1DXb5f7x9TU60w?si=8ibfmpJkSSW4hYygD6R3fA
+        target:
+          device_id: 82edc02e27747d0b049b3ccc4a4192ff
+      tap_1x_1:
+      - service: media_player.select_source
+        data:
+          source: Bathroom
+        target:
+          device_id: 82edc02e27747d0b049b3ccc4a4192ff
+      - service: media_player.play_media
+        data:
+          media_content_type: playlist
+          media_content_id: https://open.spotify.com/playlist/37i9dQZF1DXb5f7x9TU60w?si=8ibfmpJkSSW4hYygD6R3fA
+        target:
+          device_id: 82edc02e27747d0b049b3ccc4a4192ff
+      tap_1x_0: []
+- id: '1647596084800'
+  alias: Zooz Scene Controller
+  description: ''
+  use_blueprint:
+    path: zooz_scene_controller.yaml
+    input:
+      scene_controller: 724df1daca5dab28d0686f3007515c59
+      tap_1x_1:
+      - device_id: ''
+        domain: ''
+        entity_id: ''
+      tap_2x_1:
+      - service: script.turn_off_apple_tv
+        data: {}
+- id: '1647597309133'
+  alias: 'Scenes: Family Room'
+  description: ''
+  use_blueprint:
+    path: zooz_scene_controller.yaml
+    input:
+      scene_controller: 724df1daca5dab28d0686f3007515c59
+      tap_2x_1: []
+      tap_1x_1: []
+      tap_1x_3:
+      - type: toggle
+        device_id: b407e72efc1a1c98a303c0e3e5a766c6
+        entity_id: remote.family_room_xbox_remote
+        domain: remote
+- id: '1650298110547'
+  alias: 'Track Cleanings '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - vacuum.roborock_s4
+    to: Docked
+  condition: []
+  action:
+  - if:
+    - condition: numeric_state
+      entity_id: counter.cleanings
+      above: '4'
+    then:
+    - service: script.go_to_trash_can
+      data: {}
+    else:
+    - service: counter.increment
+      data: {}
+      target:
+        entity_id: counter.cleanings
+  mode: single
+- id: '1651859979695'
+  alias: 'Scenes: Laundry'
+  description: ''
+  use_blueprint:
+    path: zooz_scene_controller.yaml
+    input:
+      scene_controller: f62aeedae803bffa2ca7163c8982c908
+      tap_1x_1:
+      - service: light.toggle
+        data: {}
+        target:
+          device_id: f039fcca204a4274901c63f0d37d3d53
+      tap_1x_3:
+      - service: light.toggle
+        data: {}
+        target:
+          entity_id: light.downstairs
+      tap_1x_2:
+      - service: switch.toggle
+        data: {}
+        target:
+          device_id: e5bf1899fb0cd1a4c89a67fc8e9e42c2
+      tap_1x_4:
+      - if:
+        - condition: device
+          device_id: 9f93b82e938d4689ed1c02313c629633
+          domain: lock
+          entity_id: lock.front_door_lock
+          type: is_locked
+        then:
+        - device_id: 9f93b82e938d4689ed1c02313c629633
+          domain: lock
+          entity_id: lock.front_door_lock
+          type: unlock
+        else:
+        - device_id: 9f93b82e938d4689ed1c02313c629633
+          domain: lock
+          entity_id: lock.front_door_lock
+          type: lock
+- id: '1654340572522'
+  alias: Sophia Fan
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.sophia_sleeping
+  - platform: state
+    entity_id:
+    - binary_sensor.is_home
+    to: 'on'
+  condition: []
+  action:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.sophia_sleeping
+      state: 'on'
+    then:
+    - type: turn_on
+      device_id: e7256fc92b0a44e4a8f6d9bcc22df9b4
+      entity_id: switch.sophia_fan
+      domain: switch
+    else:
+    - type: turn_off
+      device_id: e7256fc92b0a44e4a8f6d9bcc22df9b4
+      entity_id: switch.sophia_fan
+      domain: switch
+  mode: single
+- id: '1658529219985'
+  alias: 'Notification: Porch Door Left Open'
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 2eee9fab7a16946df49f5375c79cf062
+    entity_id: binary_sensor.porch_door_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - device_id: a9f77d00cf55420aa7adc6088cc06fdc
+    domain: mobile_app
+    type: notify
+    message: Porch Door left open
+  - device_id: 261400ab5e1c4135b55792f8d7f5ba5d
+    domain: mobile_app
+    type: notify
+    message: Porch door left open
+  mode: single
+- id: '1658584657387'
+  alias: Initialize Z Wave
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - service: zwave_js.ping
+    data: {}
+    target:
+      device_id: e5bf1899fb0cd1a4c89a67fc8e9e42c2
+  mode: single
+- id: '1660488902494'
+  alias: 'Lighting: Match Basement'
+  description: ''
+  use_blueprint:
+    path: match_lighting.yaml
+    input:
+      source: light.basement_hallway_lights
+      target_light:
+        device_id:
+        - c1d6502b158ea1c258f3644dd4758f7b
+        - 98ab9fb73ca3bbd49e02dc42df2938e3
+- id: '1660640585616'
+  alias: 'Scene: Living Room'
+  description: ''
+  use_blueprint:
+    path: zooz_scene_controller.yaml
+    input:
+      scene_controller: 445e3354e42fb471eec9ac44d391048b
+      tap_1x_0: []
+      tap_2x_0:
+      - type: toggle
+        device_id: 724df1daca5dab28d0686f3007515c59
+        entity_id: switch.family_room_fan
+        domain: switch
+- id: '1661506163221'
+  alias: 'Lighting: Match Kitchen'
+  description: ''
+  use_blueprint:
+    path: match_lighting.yaml
+    input:
+      target_light:
+        device_id: 60946f5108854dd72ca42f19e2efe0a0
+      source: light.kitchen
+- id: '1663165027449'
+  alias: 'Lighting: Match Sophia Clouds'
+  description: ''
+  use_blueprint:
+    path: match_lighting.yaml
+    input:
+      source: light.sophia_lamp
+      target_light:
+        entity_id: switch.sophia_clouds
+- id: '1663764798788'
+  alias: 'Scene Control: Bathroom Dimmer'
+  description: ''
+  use_blueprint:
+    path: zen27.yaml
+    input:
+      zooz_zen27: 14b2f83f3dc4ca2b7d6e78db3bf36d9a
+      dimmer_up_2x: []
+      dimmer_down_2x:
+      - service: light.turn_off
+        data: {}
+        target:
+          area_id:
+          - b02be3c7fe7a11eaba1115af9c814499
+          - f14ab43f48c74b71b49bf573c2588219
+- id: '1663764893156'
+  alias: 'Scene Control: Bedroom Dimmer'
+  description: ''
+  use_blueprint:
+    path: zen27.yaml
+    input:
+      zooz_zen27: 4afbd91eaa453440330ee57762174b00
+      dimmer_up_2x: []
+      dimmer_down_2x:
+      - service: light.turn_off
+        data: {}
+        target:
+          area_id:
+          - b02be3c7fe7a11eaba1115af9c814499
+          - f14ab43f48c74b71b49bf573c2588219
+- id: '1663806100631'
+  alias: 'Scenes: Bedroom'
+  description: ''
+  use_blueprint:
+    path: zen27.yaml
+    input:
+      zooz_zen27: 4afbd91eaa453440330ee57762174b00
+      dimmer_down_2x:
+      - service: light.turn_off
+        data: {}
+        target:
+          area_id:
+          - f14ab43f48c74b71b49bf573c2588219
+          - b02be3c7fe7a11eaba1115af9c814499
+- id: '1664668435285'
+  alias: 'Scenes: Wesley'
+  description: ''
+  trigger:
+  - device_id: 77978197a7c443bdbae39c657f196340
+    domain: hue
+    platform: device
+    type: repeat
+    subtype: 3
+    unique_id: eb08dcf7-6e82-4ce2-91a3-b7fb663aa053
+  condition: []
+  action:
+  - type: toggle
+    device_id: abab8cdf2486aa7913fa7280ab579f29
+    entity_id: switch.wesley_fan
+    domain: switch
+  mode: single
+- id: '1664961857617'
+  alias: 'Scene Indicator: Laundry to Entrance'
+  description: ''
+  use_blueprint:
+    path: halomademeapc/set-the-indicator-light-on-a-zooz-zen32-scene-controller-button-to-match-the-state-of-a-light.yaml
+    input:
+      zooz_switch: f62aeedae803bffa2ca7163c8982c908
+      target_light: light.entrance_lights
+      scene_button: '1'
+- id: '1664966709505'
+  alias: 'Scene Indicator: Laundry to Downstairs'
+  description: ''
+  use_blueprint:
+    path: halomademeapc/set-the-indicator-light-on-a-zooz-zen32-scene-controller-button-to-match-the-state-of-a-light.yaml
+    input:
+      zooz_switch: f62aeedae803bffa2ca7163c8982c908
+      target_light: light.downstairs
+      scene_button: '3'
+- id: '1665052580158'
+  alias: 'Scene Indicator: Laundry to Garage'
+  description: ''
+  use_blueprint:
+    path: halomademeapc/set-the-indicator-light-on-a-zooz-zen32-scene-controller-button-to-match-the-state-of-a-light.yaml
+    input:
+      zooz_switch: f62aeedae803bffa2ca7163c8982c908
+      target_light: lock.garage_door
+      scene_button: '2'
+- id: '1665058403407'
+  alias: 'Scene Indicator: Laundry to Front Door Lock'
+  description: ''
+  use_blueprint:
+    path: halomademeapc/set-the-indicator-light-on-a-zooz-zen32-scene-controller-button-to-match-the-state-of-a-light.yaml
+    input:
+      zooz_switch: f62aeedae803bffa2ca7163c8982c908
+      target_light: lock.front_door_lock
+      scene_button: '4'
+- id: '1665237990719'
+  alias: Sump Pump Turned Off
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: f11ce085b7a6ba98ced15a55937e5883
+    entity_id: switch.sump_pump
+    domain: switch
+  condition: []
+  action:
+  - device_id: 261400ab5e1c4135b55792f8d7f5ba5d
+    domain: mobile_app
+    type: notify
+    message: Sump pump turned off
+  - type: turn_on
+    device_id: f11ce085b7a6ba98ced15a55937e5883
+    entity_id: switch.sump_pump
+    domain: switch
+  mode: single
+- id: '1665316430232'
+  alias: 'Scenes: Sophia'
+  description: ''
+  trigger:
+  - device_id: 03359b4b38d862abf6094983cc2ff075
+    domain: hue
+    platform: device
+    type: repeat
+    subtype: 3
+    unique_id: 82ff2e37-4bfc-4d3c-b1d8-84164748e28e
+    id: Fan
+  - device_id: 03359b4b38d862abf6094983cc2ff075
+    domain: hue
+    platform: device
+    type: repeat
+    subtype: 1
+    unique_id: 4cea1c95-f268-4d2a-ba0c-908e13b2858a
+    id: 'On'
+  - device_id: 03359b4b38d862abf6094983cc2ff075
+    domain: hue
+    platform: device
+    type: repeat
+    subtype: 4
+    unique_id: 21af7728-523b-47f6-928f-511cfc8cd206
+    id: 'Off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: Fan
+      sequence:
+      - type: toggle
+        device_id: e7256fc92b0a44e4a8f6d9bcc22df9b4
+        entity_id: switch.sophia_fan
+        domain: switch
+    - conditions:
+      - condition: trigger
+        id: 'On'
+      sequence:
+      - type: turn_on
+        device_id: 079b209ac97ae05969b9db2f290ccb9a
+        entity_id: switch.0x00124b002513be7c
+        domain: switch
+    - conditions:
+      - condition: trigger
+        id: 'Off'
+      sequence:
+      - type: turn_off
+        device_id: 079b209ac97ae05969b9db2f290ccb9a
+        entity_id: switch.0x00124b002513be7c
+        domain: switch
+  mode: single
+- id: '1665350872405'
+  alias: Sump Pit Running
+  description: ''
+  trigger:
+  - type: power
+    platform: device
+    device_id: f11ce085b7a6ba98ced15a55937e5883
+    entity_id: sensor.sump_pump_power
+    domain: sensor
+    above: 200
+    id: 'On'
+  - type: power
+    platform: device
+    device_id: f11ce085b7a6ba98ced15a55937e5883
+    entity_id: sensor.sump_pump_power
+    domain: sensor
+    above: 0
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+    id: Stuck
+  condition: []
+  action:
+  - device_id: 261400ab5e1c4135b55792f8d7f5ba5d
+    domain: mobile_app
+    type: notify
+    message: Sump pit running
+  - if:
+    - condition: trigger
+      id: Stuck
+    then:
+    - device_id: 261400ab5e1c4135b55792f8d7f5ba5d
+      domain: mobile_app
+      type: notify
+      message: Sump still running
+  mode: single
+- id: '1667664466727'
+  alias: Garage Door
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 9492af3dec9c252adc7dcfbe12ba23ea
+    domain: lutron_caseta
+    type: press
+    subtype: stop
+  condition: []
+  action:
+  - type: toggle
+    device_id: e5bf1899fb0cd1a4c89a67fc8e9e42c2
+    entity_id: switch.garage_door_button
+    domain: switch
   mode: single

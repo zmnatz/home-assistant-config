@@ -2,22 +2,48 @@ blueprint:
   name: Match Lighting
   domain: automation
   input:
-    source_light:
-      name: Source Light
+    source:
+      name: Trigger Source
       selector:
         entity:
-          domain: light
+          domain: 
+          - light 
+          - binary_sensor
     target_light:
       name: Target Light
       selector:
-        entity:
-          domain: light
-
+        target:
+          entity:
+            domain: 
+            - light
+            - switch
 trigger:
-  - entity_id: !input source_light
+  - entity_id: !input source
     platform: state
+    attribute: brightness
+    id: brightness
+  - platform: state
+    attribute: contact
+    entity_id: !input source
+    id: contact
 action:
-- data_template:
-    brightness: '{{ trigger.to_state.attributes.brightness or 0 }}'
-    entity_id: !input target_light
-  service: light.turn_on
+- choose:
+  - conditions:
+    - condition: trigger
+      id: brightness
+    sequence:
+    - data_template:
+        brightness: '{{ trigger.to_state.attributes.brightness or 0 }}'
+      service: light.turn_on
+      target: !input target_light
+    - if:
+      - condition: numeric_state
+        entity_id: !input source
+        attribute: brightness
+        above: 150
+      then:
+      - service: switch.turn_on
+        target: !input target_light
+      else:
+      - service: switch.turn_off
+        target: !input target_light

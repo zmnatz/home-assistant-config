@@ -5,23 +5,156 @@
       state: true
       brightness: 255
       transition: 600
-- id: '1604319197611'
-  name: To Work
+- id: '1638492986767'
+  name: Night TV
   entities:
-    lock.front_door:
-      lock_state: unlocked
-      friendly_name: Front Door
-      state: unlocked
-    group.downstairs:
-      entity_id:
-      - light.kitchen_lights
-      - light.kitchen
-      - light.living_room_lights
-      - light.dining_room
-      - light.hallway
-      - light.entrance_lights
-      order: 1
-      friendly_name: Downstairs
-      icon: mdi:power
+    light.family_room_fan:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
+      brightness: 93
+      friendly_name: Family Room Fan
+      icon: mdi:ceiling-fan-light
+      supported_features: 32
+      state: 'on'
+    light.family_room_recessed:
+      supported_color_modes:
+      - brightness
+      friendly_name: Family Room Recessed Lights
+      icon: mdi:light-recessed
+      supported_features: 32
       state: 'off'
-  icon: mdi:car
+    light.kitchen:
+      supported_color_modes:
+      - brightness
+      friendly_name: Kitchen Lights
+      icon: mdi:light-recessed
+      supported_features: 32
+      state: 'off'
+    light.kitchen_table:
+      supported_color_modes:
+      - brightness
+      friendly_name: Kitchen Table
+      icon: mdi:table-furniture
+      supported_features: 32
+      state: 'off'
+  icon: mdi:weather-night
+- id: '1639213102330'
+  name: Main Floor Off
+  entities:
+    light.living_room_lights:
+      supported_color_modes:
+      - brightness
+      device_id: '8'
+      zone_id: '4'
+      friendly_name: Living Room
+      icon: mdi:sofa
+      supported_features: 33
+      state: 'off'
+    light.family_room_fan:
+      supported_color_modes:
+      - brightness
+      friendly_name: Family Room Fan
+      icon: mdi:ceiling-fan-light
+      supported_features: 32
+      state: 'off'
+    light.family_room_recessed:
+      supported_color_modes:
+      - brightness
+      friendly_name: Family Room Recessed Lights
+      icon: mdi:light-recessed
+      supported_features: 32
+      state: 'off'
+    switch.family_room_fan:
+      friendly_name: Family Room Fan
+      icon: mdi:ceiling-fan
+      state: 'off'
+    light.kitchen_table:
+      supported_color_modes:
+      - brightness
+      friendly_name: Kitchen Table
+      icon: mdi:table-furniture
+      supported_features: 32
+      state: 'off'
+    light.kitchen:
+      supported_color_modes:
+      - brightness
+      friendly_name: Kitchen Lights
+      icon: mdi:light-recessed
+      supported_features: 32
+      state: 'off'
+    light.entrance_lights:
+      supported_color_modes:
+      - brightness
+      device_id: '11'
+      zone_id: '6'
+      friendly_name: Entrance
+      icon: mdi:door
+      supported_features: 33
+      state: 'off'
+    light.dining_room_lights:
+      supported_color_modes:
+      - brightness
+      device_id: '2'
+      zone_id: '1'
+      friendly_name: Dining Room
+      supported_features: 33
+      icon: mdi:silverware
+      state: 'off'
+    lock.front_door_lock:
+      friendly_name: Front Door Lock
+      state: locked
+    lock.garage_door:
+      friendly_name: Garage Door
+      icon: mdi:garage
+      assumed_state: true
+      state: locked
+    switch.christmas_tree:
+      friendly_name: Christmas Tree
+      icon: mdi:pine-tree
+      state: 'off'
+  icon: mdi:weather-night
+- id: '1664325640662'
+  name: Night Feeding
+  entities:
+    light.nursing_lamp:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      - xy
+      color_mode: color_temp
+      brightness: 56
+      color_temp: 500
+      hs_color:
+      - 30.601
+      - 94.547
+      rgb_color:
+      - 255
+      - 136
+      - 13
+      xy_color:
+      - 0.599
+      - 0.382
+      mode: normal
+      dynamics: none
+      icon: mdi:mother-nurse
+      friendly_name: Nursing Lamp
+      supported_features: 40
+      state: 'on'
+    light.master_bedroom_lights:
+      supported_color_modes:
+      - brightness
+      icon: mdi:ceiling-fan-light
+      friendly_name: Master Bedroom Lights
+      supported_features: 32
+      state: 'off'
+    light.master_bathroom_lights:
+      supported_color_modes:
+      - brightness
+      icon: mdi:toilet
+      friendly_name: Master Bathroom Lights
+      supported_features: 32
+      state: 'off'
+  icon: mdi:baby-bottle-outline
+  metadata: {}
