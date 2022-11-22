@@ -1,7 +1,0 @@
-friendly_name: Apple TV
-icon_template: mdi:apple
-value_template: false 
-turn_on:
-  service: script.turn_on_apple_tv
-turn_off:
-  service: script.turn_off_apple_tv

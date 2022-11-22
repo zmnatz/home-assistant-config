@@ -1,9 +1,8 @@
-
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 homeassistant:
   customize: !include customize.yaml
-  
+
 frontend:
   themes: !include_dir_merge_named themes
 config:
@@ -26,37 +25,22 @@ scene: !include scenes.yaml
 zone: !include zone.yaml
 
 # Entities
-binary_sensor: !include entities/binary_sensors.yaml
-sensor: !include entities/sensors.yaml
+# binary_sensor: !include entities/binary_sensors.yaml
 switch: !include entities/switches.yaml
 remote: !include entities/remote.yaml
 lock: !include_dir_list entities/template/lock
 
 template:
-- binary_sensor:
-  - name: "Is Home"
-    state: >
-      {{ is_state('person.zaven', 'home')
-        or is_state('person.casey', 'home')
-        or is_state('input_boolean.guest_mode', 'on')
-      }}
-    device_class: presence
-  - name: "Kitchen Occupied"
-    state: >-
-      {{is_state('binary_sensor.kitchen_motion', 'on')}}
-    device_class: occupancy
-    delay_off: 
-      minutes: 20
-    
+  - binary_sensor: !include_dir_list entities/template/binary_sensor
+  - sensor: !include_dir_list entities/template/sensor
 
-  
 # Integrations
 # hue: !include integrations/hue.yaml
 
 # Assistants
 # homekit: !include assistants/homekit.yaml
 google_assistant: !include assistants/google_assistant.yaml
-emulated_hue: !include assistants/emulated_hue.yaml  
+emulated_hue: !include assistants/emulated_hue.yaml
 
 # Notifications
 telegram_bot: !include notifications/telegram.yaml

@@ -301,13 +301,6 @@
                     },
                     {
                       "type": "custom:mushroom-light-card",
-                      "entity": "light.nursing_lamp",
-                      "layout": "vertical",
-                      "primary_info": "none",
-                      "secondary_info": "none"
-                    },
-                    {
-                      "type": "custom:mushroom-light-card",
                       "entity": "light.zaven_nightstand",
                       "layout": "vertical",
                       "primary_info": "none",
@@ -376,26 +369,19 @@
                           "layout": "vertical"
                         },
                         {
+                          "type": "custom:mushroom-light-card",
+                          "layout": "vertical",
+                          "primary_info": "none",
+                          "secondary_info": "none",
+                          "use_light_color": true,
+                          "entity": "light.dinosaur_lamp"
+                        },
+                        {
                           "type": "custom:mushroom-fan-card",
                           "entity": "fan.sophia_fan",
                           "layout": "vertical",
                           "primary_info": "none",
                           "secondary_info": "none"
-                        },
-                        {
-                          "type": "custom:mushroom-media-player-card",
-                          "entity": "media_player.nursery_echo",
-                          "icon": "mdi:speaker",
-                          "primary_info": "none",
-                          "secondary_info": "none",
-                          "layout": "vertical",
-                          "use_media_info": false,
-                          "tap_action": {
-                            "action": "more-info"
-                          },
-                          "hold_action": {
-                            "action": "toggle"
-                          }
                         }
                       ]
                     }

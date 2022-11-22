@@ -1,4 +1,6 @@
-friendly_name: Kitchen Presence
+name: "Kitchen Occupied"
 state: >-
-    {{is_state('binary_sensor.kitchen_motion', 'off')}}
-device_class: Presence
+  {{is_state('binary_sensor.kitchen_motion', 'on')}}
+device_class: occupancy
+delay_off:
+  minutes: 20
